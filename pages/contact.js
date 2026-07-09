@@ -37,10 +37,16 @@ export default function Contact() {
             <div className="channel-label">Position</div>
             <div className="channel-value">{SITE.role}</div>
           </div>
-          <div className="channel-card">
-            <div className="channel-label">Response</div>
-            <div className="channel-value">이메일로 연락 주시면 빠르게 답변드립니다</div>
-          </div>
+          <a
+            href={SITE.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="channel-card"
+            style={{ display: "block" }}
+          >
+            <div className="channel-label">LinkedIn</div>
+            <div className="channel-value">프로필 보기 ↗</div>
+          </a>
         </div>
       </div>
     </section>
