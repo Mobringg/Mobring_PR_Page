@@ -50,22 +50,6 @@ export default function Home() {
 
       <section className="section">
         <div className="shell">
-          <p className="section-label">Skills &amp; Tools</p>
-          <h2 className="section-title">다루는 스킬과 툴</h2>
-          <p className="section-desc">
-            기획 문서를 실제 구현 가능한 형태로 옮기고, 팀과 함께 작업하는 데 사용하는
-            도구들입니다.
-          </p>
-          <div className="skill-list">
-            {SKILLS.map((s) => (
-              <SkillBar key={s.name} name={s.name} level={s.level} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="shell">
           <p className="section-label">Played Games</p>
           <h2 className="section-title">{PLAYED_GAMES.title}</h2>
           <p className="section-desc">{PLAYED_GAMES.desc}</p>
@@ -78,6 +62,22 @@ export default function Home() {
           >
             플레이 기록 보러가기 ↗
           </a>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="shell">
+          <p className="section-label">Skills &amp; Tools</p>
+          <h2 className="section-title">다루는 스킬과 툴</h2>
+          <p className="section-desc">
+            기획 문서를 실제 구현 가능한 형태로 옮기고, 팀과 함께 작업하는 데 사용하는
+            도구들입니다.
+          </p>
+          <div className="skill-list">
+            {SKILLS.map((s) => (
+              <SkillBar key={s.name} name={s.name} level={s.level} />
+            ))}
+          </div>
         </div>
       </section>
     </>
