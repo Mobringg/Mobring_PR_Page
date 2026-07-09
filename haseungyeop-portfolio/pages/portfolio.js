@@ -7,8 +7,8 @@ export default function Portfolio() {
         <p className="section-label">Portfolio</p>
         <h1 className="section-title">프로젝트</h1>
         <p className="section-desc">
-          팀 프로젝트에서 담당한 기획 업무와 산출물입니다. 프로젝트명을 클릭하면 상세
-          기획 문서로 이동합니다.
+          팀 프로젝트에서 담당한 기획 업무와 개인 제안 문서입니다. 제목이나 링크를
+          클릭하면 상세 문서로 이동합니다.
         </p>
 
         {PROJECTS.map((p) => (
@@ -22,19 +22,18 @@ export default function Portfolio() {
                 {p.summary}
               </p>
             </div>
-            <div className="project-meta-grid">
-              <div className="project-meta-cell">
-                <div className="project-meta-label">Role</div>
-                <div className="project-meta-value">{p.role}</div>
-              </div>
-              <div className="project-meta-cell">
-                <div className="project-meta-label">Engine</div>
-                <div className="project-meta-value">{p.engine}</div>
-              </div>
-              <div className="project-meta-cell">
-                <div className="project-meta-label">Genre</div>
-                <div className="project-meta-value">{p.genre}</div>
-              </div>
+            <div
+              className="project-meta-grid"
+              style={{
+                gridTemplateColumns: `repeat(${p.meta.length}, 1fr)`,
+              }}
+            >
+              {p.meta.map((m) => (
+                <div className="project-meta-cell" key={m.label}>
+                  <div className="project-meta-label">{m.label}</div>
+                  <div className="project-meta-value">{m.value}</div>
+                </div>
+              ))}
             </div>
             <div className="project-foot">
               <a
@@ -43,7 +42,7 @@ export default function Portfolio() {
                 rel="noopener noreferrer"
                 className="project-link"
               >
-                기획 문서 보기 ↗
+                {p.linkLabel || "자세히 보기"} ↗
               </a>
             </div>
           </article>

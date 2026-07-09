@@ -91,10 +91,45 @@ export const PROJECTS = [
     id: "project-s",
     title: "Project_S",
     genre: "3D TPS 슈팅",
-    role: "메인 기획",
-    engine: "Unreal Engine 5",
     link: "https://docs.google.com/spreadsheets/d/11vjUWDjpZmqzh-m1jNHY52r9R0ue1dUmxAjb3iIj0O4/edit?gid=2090307624#gid=2090307624",
+    linkLabel: "기획 문서 보기",
+    external: true,
     summary:
       "팀 프로젝트에서 메인 기획을 담당하며 시스템 기획 · UI 기획 · 레벨 디자인을 수행했습니다. 실제 구현 가능한 기획서를 목표로, 의도를 뒷받침하는 근거를 중심으로 문서를 구성했습니다.",
+    meta: [
+      { label: "Role", value: "메인 기획" },
+      { label: "Engine", value: "Unreal Engine 5" },
+      { label: "Genre", value: "3D TPS 슈팅" },
+    ],
+  },
+  {
+    id: "nikke-minigame",
+    title: "승리의 여신: 니케 — 신규 미니게임 제안서",
+    genre: "오토배틀러 미니게임 기획",
+    link: "/files/nikke-minigame-proposal.pdf",
+    linkLabel: "제안서 PDF 보기",
+    external: true,
+    summary:
+      "서비스 중인 게임 '승리의 여신: 니케'를 분석해 신규 2차 콘텐츠(오토배틀러형 미니게임)를 제안한 기획서입니다. 유저 이탈 데이터와 업계 사례를 근거로 장르를 선정하고, 기존 캐릭터 분류 체계(기업·무기·클래스)를 시너지 시스템으로 재설계했습니다.",
+    meta: [
+      { label: "Role", value: "기획 및 제안" },
+      { label: "Format", value: "기획 제안서 (PDF)" },
+      { label: "Genre", value: "오토배틀러" },
+    ],
+  },
+  {
+    id: "sevenknights-abyss-tower",
+    title: "세븐나이츠 리버스 — 심연의 탑 컨텐츠 제안서",
+    genre: "로그라이트 덱빌딩 기획",
+    link: "/files/sevenknights-abyss-tower-proposal.pdf",
+    linkLabel: "제안서 PDF 보기",
+    external: true,
+    summary:
+      "서비스 중인 '세븐나이츠 리버스'의 기존 챌린지 콘텐츠(무한의 탑)와 신규 콘텐츠(시련의 탑) 간 유사성으로 인한 유저 이탈 문제를 데이터로 짚고, 로그라이트 장르를 결합한 신규 콘텐츠 '심연의 탑'을 제안했습니다. 랜덤 버프 선택과 시즌제 덱빌딩 시스템으로 기존 리소스를 재활용하면서도 차별화된 재미를 설계했습니다.",
+    meta: [
+      { label: "Role", value: "기획 및 제안" },
+      { label: "Format", value: "기획 제안서 (PDF)" },
+      { label: "Genre", value: "로그라이트" },
+    ],
   },
 ];
