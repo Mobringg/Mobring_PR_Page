@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[역기획서] 배고픈 무토 - 메이플스토리</title>
+<style>
+  :root{
+    --bg: #f6f3ec;
+    --paper: #ffffff;
+    --ink: #2b2620;
+    --ink-soft: #6b6255;
+    --accent: #c65d2e;
+    --accent-soft: #f0d9c9;
+    --accent2: #4c7a63;
+    --accent2-soft: #dbe9e0;
+    --line: #e4ddcf;
+    --tag: #efe6d4;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+    line-height:1.7;
+    font-size:15.5px;
+    padding: 40px 20px 80px;
+  }
+  .sheet{
+    max-width: 980px;
+    margin: 0 auto;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(60,45,20,0.08);
+    overflow: hidden;
+  }
+
+  /* ---- header ---- */
+  .cover{
+    position:relative;
+    padding: 44px 56px 30px;
+    background:
+      radial-gradient(circle at 85% -10%, rgba(198,93,46,0.12), transparent 55%),
+      radial-gradient(circle at 5% 110%, rgba(76,122,99,0.12), transparent 55%);
+    border-bottom: 2px solid var(--ink);
+  }
+  .kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    letter-spacing:.12em;
+    color: var(--accent);
+    font-weight:700;
+    border:1px solid var(--accent);
+    padding:4px 12px;
+    border-radius: 999px;
+    margin-bottom:16px;
+  }
+  h1.title{
+    font-size:34px;
+    margin:0 0 6px;
+    letter-spacing:-0.02em;
+  }
+  .subtitle{
+    color: var(--ink-soft);
+    font-size:15.5px;
+    margin:0 0 22px;
+  }
+  .meta-grid{
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+    gap:1px;
+    background: var(--line);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .meta-cell{
+    background: var(--paper);
+    padding:12px 16px;
+  }
+  .meta-cell .label{
+    font-size:11px;
+    color: var(--ink-soft);
+    letter-spacing:.06em;
+    margin-bottom:4px;
+  }
+  .meta-cell .value{
+    font-size:14px;
+    font-weight:700;
+  }
+
+  /* ---- tab bar ---- */
+  .tabbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    padding: 14px 20px;
+    background: #efe9db;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .tab-btn{
+    appearance:none;
+    border:1px solid transparent;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size:13px;
+    font-weight:700;
+    padding:9px 14px;
+    border-radius: 999px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    white-space:nowrap;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .tab-btn .num{
+    font-size:11px;
+    background: var(--ink);
+    color:#fff;
+    border-radius:6px;
+    padding:1px 6px;
+    opacity:.55;
+  }
+  .tab-btn:hover{
+    background: #ffffffaa;
+    color: var(--ink);
+  }
+  .tab-btn.active{
+    background: var(--ink);
+    color:#fff;
+    border-color: var(--ink);
+  }
+  .tab-btn.active .num{
+    background: var(--accent);
+    opacity:1;
+  }
+
+  /* ---- panels ---- */
+  .panel{ display:none; padding: 36px 56px 44px; }
+  .panel.active{ display:block; }
+
+  .panel-head{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-bottom:6px;
+  }
+  .panel-num{
+    font-size:13px;
+    font-weight:800;
+    color: var(--paper);
+    background: var(--ink);
+    padding:3px 10px;
+    border-radius:6px;
+  }
+  h2{
+    font-size:22px;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .panel-desc{
+    color: var(--ink-soft);
+    font-size:13.5px;
+    margin: 6px 0 24px;
+  }
+  h3{
+    font-size:16px;
+    margin: 24px 0 10px;
+    color: var(--accent);
+  }
+  h3:first-of-type{ margin-top:4px; }
+  p{ margin: 0 0 12px; }
+  .lead{
+    font-size:15px;
+    color:#463f34;
+    background: var(--tag);
+    border-left:4px solid var(--accent);
+    padding:14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin-bottom:22px;
+  }
+
+  /* ---- cards ---- */
+  .card-grid{
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:14px;
+    margin: 16px 0 6px;
+  }
+  .card{
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px;
+    background: #fffdf8;
+  }
+  .card .icon{ font-size:20px; margin-bottom:8px; display:block; }
+  .card h4{ margin:0 0 6px; font-size:14px; }
+  .card p{ font-size:13px; color: var(--ink-soft); margin:0; }
+
+  /* ---- core loop diagram ---- */
+  .loop-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:0;
+    margin: 22px 0 8px;
+    padding: 24px 10px;
+    background: #fbf8f1;
+    border:1px dashed #d8cdb6;
+    border-radius:14px;
+  }
+  .loop-node{
+    width:145px;
+    text-align:center;
+    padding: 14px 10px;
+    background: var(--paper);
+    border:2px solid var(--ink);
+    border-radius:12px;
+    font-size:12.5px;
+    font-weight:700;
+  }
+  .loop-node .sub{
+    display:block;
+    font-weight:400;
+    color: var(--ink-soft);
+    font-size:11px;
+    margin-top:4px;
+  }
+  .loop-arrow{ font-size:20px; color: var(--accent); padding: 0 8px; font-weight:700; }
+  .loop-return{
+    width:100%;
+    text-align:center;
+    margin-top:12px;
+    font-size:12px;
+    color: var(--accent2);
+    font-weight:700;
+  }
+
+  /* ---- table ---- */
+  table{ width:100%; border-collapse: collapse; font-size:13.5px; margin: 10px 0 6px; }
+  th, td{ border:1px solid var(--line); padding:9px 12px; text-align:left; vertical-align:top; }
+  th{ background: var(--ink); color:#fff; font-weight:700; font-size:12.5px; }
+  tr:nth-child(even) td{ background: #faf7f0; }
+  .tag{
+    display:inline-block; font-size:11px; padding:2px 8px; border-radius:6px;
+    background: var(--accent-soft); color: var(--accent); font-weight:700; margin-right:4px;
+  }
+  .tag.green{ background: var(--accent2-soft); color: var(--accent2); }
+
+  /* ---- flow ---- */
+  .flow{ display:flex; flex-direction:column; gap:0; margin: 16px 0; }
+  .flow-step{ display:flex; gap:14px; padding: 12px 0; border-bottom:1px dashed var(--line); }
+  .flow-step:last-child{ border-bottom:none; }
+  .flow-step .num{
+    flex:0 0 32px; height:32px; border-radius:50%; background: var(--ink); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:12.5px;
+  }
+  .flow-step .body h4{ margin:0 0 4px; font-size:14px; }
+  .flow-step .body p{ font-size:13px; color: var(--ink-soft); margin:0; }
+
+  /* ---- pros/cons ---- */
+  .two-col{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin: 10px 0; }
+  .col-box{ border-radius:12px; padding:15px 17px; border:1px solid var(--line); }
+  .col-box.good{ background: var(--accent2-soft); border-color:#bcd8c8; }
+  .col-box.bad{ background: #fbeae2; border-color:#eecab6; }
+  .col-box h4{ margin:0 0 8px; font-size:13.5px; }
+  .col-box ul{ margin:0; padding-left:18px; }
+  .col-box li{ font-size:13px; margin-bottom:6px; color:#4a4438; }
+
+  ul.plain{ padding-left:20px; margin:8px 0; }
+  ul.plain li{ margin-bottom:6px; font-size:14px; }
+
+  .footnote{ font-size:11.5px; color: var(--ink-soft); margin-top:6px; }
+
+  /* ---- schema / data table styling ---- */
+  .schema-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin: 30px 0 4px;
+  }
+  .schema-title .tbl-name{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:15px;
+    font-weight:800;
+    color: var(--ink);
+    background: #eee6d3;
+    padding:4px 10px;
+    border-radius:6px;
+    border:1px solid #ddd0b0;
+  }
+  .schema-title .tbl-desc{
+    font-size:12.5px;
+    color: var(--ink-soft);
+  }
+  table.schema{ font-size:12.8px; }
+  table.schema th{ font-size:11.5px; }
+  table.schema .fname{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .dtype{
+    display:inline-block;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:11px;
+    font-weight:700;
+    padding:1px 7px;
+    border-radius:5px;
+    white-space:nowrap;
+  }
+  .dtype.int{ background:#dbe6f2; color:#2a5d8f; }
+  .dtype.float{ background:#e3dcf2; color:#5a3f96; }
+  .dtype.string{ background:#f2e0d8; color:#a4531f; }
+  .dtype.bool{ background:#e0f0e0; color:#2f7a3f; }
+  .dtype.enum{ background:#f2e8b8; color:#8a6d00; }
+  .key-pk{
+    display:inline-block;
+    font-size:10px;
+    font-weight:800;
+    color:#fff;
+    background: var(--accent);
+    padding:1px 6px;
+    border-radius:4px;
+    margin-right:4px;
+  }
+  .key-fk{
+    display:inline-block;
+    font-size:10px;
+    font-weight:800;
+    color:#fff;
+    background: var(--accent2);
+    padding:1px 6px;
+    border-radius:4px;
+    margin-right:4px;
+  }
+  .tbd{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:11.5px;
+    color:#a15c1f;
+    font-weight:700;
+  }
+  .placeholder{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:11.5px;
+    color:#2a5d8f;
+    font-weight:700;
+    background:#eaf1f8;
+    padding:1px 6px;
+    border-radius:4px;
+  }
+  .erd{
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:12.5px;
+    background:#2b2620;
+    color:#f2ece0;
+    padding:18px 20px;
+    border-radius:10px;
+    line-height:1.9;
+    overflow-x:auto;
+    white-space:pre;
+    margin: 14px 0 20px;
+  }
+  .erd .arrow{ color:#e0a374; }
+  .erd .field{ color:#9fd3b0; }
+
+  .nav-foot{
+    display:flex;
+    justify-content:space-between;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .nav-foot button{
+    appearance:none;
+    border:1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    font-family:inherit;
+    font-size:12.8px;
+    font-weight:700;
+    padding:9px 16px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  .nav-foot button:hover{ background: var(--tag); }
+  .nav-foot .spacer{ flex:1; }
+
+  @media (max-width: 720px){
+    .panel{ padding: 26px 22px 34px; }
+    .cover{ padding: 32px 22px 24px; }
+    .meta-grid{ grid-template-columns: repeat(2,1fr); }
+    .card-grid{ grid-template-columns: 1fr; }
+    .two-col{ grid-template-columns: 1fr; }
+    .loop-node{ width: 110px; }
+    .tabbar{ overflow-x:auto; flex-wrap:nowrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="kicker">CONTENT REVERSE-DESIGN DOCUMENT</div>
+    <h1 class="title">배고픈 무토 (Hungry Muto)</h1>
+    <p class="subtitle">메이플스토리 · 아케인리버 · 츄츄 아일랜드 주간 파티 콘텐츠 역기획서</p>
+
+    <div class="meta-grid">
+      <div class="meta-cell"><div class="label">장르 / 분류</div><div class="value">협동 요리·채집 파티 퀘스트</div></div>
+      <div class="meta-cell"><div class="label">등장 지역</div><div class="value">츄츄 아일랜드 (아케인리버)</div></div>
+      <div class="meta-cell"><div class="label">인원 / 진입 레벨</div><div class="value">1~4인 파티 · Lv.210</div></div>
+      <div class="meta-cell"><div class="label">주기</div><div class="value">주 1회 클리어 (목요일 초기화)</div></div>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tabbar" id="tabbar">
+    <button class="tab-btn active" data-target="p0"><span class="num">00</span>작성 배경·목적</button>
+    <button class="tab-btn" data-target="p1"><span class="num">01</span>주간 퀘스트 고찰</button>
+    <button class="tab-btn" data-target="p2"><span class="num">02</span>콘텐츠 개요</button>
+    <button class="tab-btn" data-target="p3"><span class="num">03</span>재미 요소 분석</button>
+    <button class="tab-btn" data-target="p4"><span class="num">04</span>지역 연관성</button>
+    <button class="tab-btn" data-target="p5"><span class="num">05</span>코어 루프</button>
+    <button class="tab-btn" data-target="p6"><span class="num">06</span>종합 평가</button>
+    <button class="tab-btn" data-target="p7"><span class="num">07</span>데이터 테이블</button>
+  </div>
+
+  <!-- PANEL 0 -->
+  <div class="panel active" id="p0">
+    <div class="panel-head"><span class="panel-num">00</span><h2>문서 작성 배경 및 목적</h2></div>
+    <p class="panel-desc">이 문서를 왜 쓰게 되었는지, 무엇을 전달하려는지</p>
+
+    <p>
+      본 문서는 이미 출시되어 다년간 서비스된 메이플스토리의 주간 콘텐츠 "배고픈 무토"를 대상으로,
+      완성된 결과물을 역으로 분해하여 그 안에 담긴 설계 의도와 규칙을 재구성하는 <b>역기획</b> 문서다.
+      신규 기획을 제안하기 위한 문서가 아니라, 이미 잘 작동하고 있는(혹은 일부
+      아쉬운 지점이 남아있는) 콘텐츠를 뜯어보며 <b>"왜 이렇게 설계했을 때 재미가 성립하는가"</b>를
+      구조적으로 언어화하는 데 목적이 있다.
+    </p>
+    <p>
+      특히 배고픈 무토는 RPG의 반복 콘텐츠 중에서도 "주간 퀘스트"라는 형태를 취하고 있어 분석 가치가
+      크다. 주간 퀘스트는 일일 퀘스트보다 플레이 빈도는 낮지만 유저의 장기 접속 동기와 직결되기 때문에,
+      이 콘텐츠를 분석하는 것은 곧 <b>"주간 단위 반복 콘텐츠는 어떤 조건을 만족해야 유저를 지속적으로
+      붙잡을 수 있는가"</b>를 검증하는 작업이기도 하다.
+    </p>
+
+    <h3>이 문서로 전달하고자 하는 것</h3>
+    <ul class="plain">
+      <li>주간 퀘스트라는 형식이 RPG 안에서 어떤 기능을 수행해야 하는지에 대한 일반론적 고찰</li>
+      <li>배고픈 무토가 그 기능을 "재미", "지역 연계성", "코어 루프" 세 가지로 나눠 어떻게 구현했는지에 대한 사례 분석</li>
+      <li>이 분석에서 도출한 설계 패턴을 향후 유사 콘텐츠 기획 시 참고할 수 있는 형태로 정리</li>
+    </ul>
+
+    <div class="nav-foot"><span class="spacer"></span><button data-goto="p1">다음: 주간 퀘스트 고찰 →</button></div>
+  </div>
+
+  <!-- PANEL 1 : 콘텐츠 개요 (구 02, 순서 조정) -->
+  <div class="panel" id="p1">
+    <div class="panel-head"><span class="panel-num">01</span><h2>주간 퀘스트에 대한 고찰</h2></div>
+    <p class="panel-desc">배고픈 무토를 본격적으로 다루기에 앞서, "주간 퀘스트"라는 형식 자체를 먼저 짚어본다</p>
+
+    <h3>왜 RPG는 주간 퀘스트를 필요로 하는가</h3>
+    <p>
+      매일 반복 가능한 콘텐츠는 접속 습관은 만들 수 있지만, 쌓일수록 피로도가 누적되어 "매일 해야 하는
+      숙제"로 전락하기 쉽다. 주간 퀘스트는 일주일이라는 호흡으로 성장 총량을 분배해, 며칠 접속하지 못해도
+      크게 뒤처지지 않는다는 심리적 여유를 주는 동시에, 주기마다 "이번 주 안에 반드시 해야 할 일"을
+      상기시켜 장기 이탈을 막는다.
+    </p>
+
+    <h3>유저는 왜 주간 퀘스트를 플레이해야 하는가</h3>
+    <p>
+      대체로 "하지 않으면 손해를 본다"는 기회비용 인식에서 출발한다. 주간 퀘스트의 보상은 대개 일일
+      콘텐츠로 대체할 수 없는 총량이거나, 다른 방법으로는 얻기 매우 비효율적인 재화로 구성되어 있어
+      유저는 이를 "선택 가능한 콘텐츠"가 아닌 "성장 계획의 필수 항목"으로 인식하게 된다.
+    </p>
+
+    <h3>메이플스토리 주간 콘텐츠 생태계 안에서의 위치</h3>
+
+    <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:760px; display:block; margin: 10px auto 4px; font-family: 'Pretendard','Apple SD Gothic Neo',sans-serif;">
+      <defs>
+        <marker id="mutoArrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 z" fill="#c65d2e"/>
+        </marker>
+      </defs>
+
+      <rect x="20" y="20" width="220" height="150" rx="14" fill="#fffdf8" stroke="#e4ddcf" stroke-width="2"/>
+      <text x="130" y="48" text-anchor="middle" font-size="15" font-weight="800" fill="#2b2620">주간 보스</text>
+      <text x="130" y="68" text-anchor="middle" font-size="11.5" fill="#6b6255">스우 · 데미안 · 루시드 · 윌 등</text>
+      <line x1="40" y1="80" x2="220" y2="80" stroke="#e4ddcf"/>
+      <text x="130" y="99" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c65d2e">전투력 강화</text>
+      <text x="130" y="115" text-anchor="middle" font-size="11" fill="#6b6255">(장비 아이템)</text>
+      <text x="130" y="138" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c65d2e">메소(재화) 획득</text>
+      <text x="130" y="154" text-anchor="middle" font-size="11" fill="#6b6255">(결정석 고정 드롭)</text>
+
+      <rect x="270" y="20" width="220" height="150" rx="14" fill="#fffdf8" stroke="#e4ddcf" stroke-width="2"/>
+      <text x="380" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#2b2620">유니온 주간 미션</text>
+      <text x="380" y="72" text-anchor="middle" font-size="11.5" fill="#6b6255">계정 단위 컨텐츠</text>
+      <line x1="290" y1="88" x2="470" y2="88" stroke="#e4ddcf"/>
+      <text x="380" y="115" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c65d2e">계정 단위 성장</text>
+
+      <rect x="520" y="20" width="220" height="150" rx="14" fill="#fbf3ea" stroke="#c65d2e" stroke-width="3"/>
+      <text x="630" y="50" text-anchor="middle" font-size="15" font-weight="800" fill="#2b2620">아케인·그랜디스 심볼</text>
+      <text x="630" y="72" text-anchor="middle" font-size="11.5" fill="#6b6255">도원경 · 츄츄 아일랜드 등</text>
+      <line x1="540" y1="88" x2="720" y2="88" stroke="#eecab6"/>
+      <text x="630" y="115" text-anchor="middle" font-size="12.5" font-weight="700" fill="#c65d2e">코어 스탯 확장</text>
+      <text x="630" y="134" text-anchor="middle" font-size="11.5" fill="#6b6255">(아케인포스 등)</text>
+
+      <line x1="630" y1="170" x2="630" y2="200" stroke="#c65d2e" stroke-width="2" marker-end="url(#mutoArrow)"/>
+      <rect x="555" y="205" width="150" height="40" rx="10" fill="#c65d2e"/>
+      <text x="630" y="230" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fff">배고픈 무토</text>
+    </svg>
+    <p class="footnote" style="text-align:center; margin-bottom:20px;">메이플스토리 주간 콘텐츠는 크게 세 갈래로 나뉜다 - 배고픈 무토는 그중 어디에 속할까</p>
+
+    <p>
+      즉 배고픈 무토를 단일 콘텐츠로만 보면 "요리 미니게임"에 불과하지만, 게임 전체의 주간 루프 안에서는
+      장비 강화와는 별개로 <b>코어 스탯을 키우는 또 다른 성장 루트</b> 역할을 한다. 유저가 한 가지 방법에만
+      의존하지 않고 여러 방법을 병행해서 캐릭터를 키우도록 만드는 것이 이 콘텐츠가 주간 루프 안에서 맡은
+      실질적인 역할이다.
+    </p>
+
+    <h3>동기는 어떻게 부여되는가 - 배고픈 무토의 예</h3>
+    <p class="footnote" style="margin-bottom:14px;">
+      ※ 배고픈 무토에 대한 자세한 소개는 다음 장(02. 콘텐츠 개요)에서 다룬다. 여기서는 "주간 퀘스트가
+      보상을 어떻게 설계해야 하는가"를 설명하기 위한 예시로 미리 가져와 본다.
+    </p>
+    <table>
+      <tr><th>보상 요소</th><th>내용</th><th>동기부여 방식</th></tr>
+      <tr>
+        <td><span class="tag">아케인심볼: 츄츄 아일랜드</span></td>
+        <td>1회 클리어 시 240개 (일일 퀘스트 병행 시 주간 최대 520개)</td>
+        <td>해당 지역 아케인포스를 올리는 사실상 유일한 재화 → "필수 항목" 인식 형성</td>
+      </tr>
+      <tr>
+        <td><span class="tag green">대량 경험치</span></td>
+        <td>동레벨 사냥 대비 매우 높은 처치·클리어 경험치</td>
+        <td>짧은 시간·낮은 부담으로 큰 성장치 확보 → "놓치기 아까운 기회" 인식 형성</td>
+      </tr>
+    </table>
+    <p>
+      배고픈 무토는 주간 퀘스트가 지녀야 할 기본 조건, 즉 <b>낮은 빈도 대비 높은 보상 밀도, 대체
+      불가능한 전용 재화, 짧은 플레이 시간</b>을 모두 만족시킨다. 이 조건 위에 다음 장부터 다룰 재미·
+      지역 연계·코어 루프 설계가 더해지면서, 단순히 "해야 하니까 하는" 수준을 넘어 자발적인 재플레이를
+      유도하려는 설계로 볼 수 있다.
+    </p>
+
+    <div class="nav-foot"><button data-goto="p0">← 이전</button><button data-goto="p2">다음: 콘텐츠 개요 →</button></div>
+  </div>
+
+  <!-- PANEL 2 : 콘텐츠 개요 -->
+  <div class="panel" id="p2">
+    <div class="panel-head"><span class="panel-num">02</span><h2>콘텐츠 개요</h2></div>
+    <p class="panel-desc">배고픈 무토란 무엇인가</p>
+
+    <p class="lead">
+      "배고픈 무토"는 츄츄 아일랜드의 스토리를 클리어한 유저가 NPC '시미아'를 통해 입장하는 주간 파티
+      콘텐츠다. 굴라와 대치 중인 정령 '무토'를 위해 파티원과 함께 재료를 채집하고 요리를 완성해 무토의
+      기세를 끌어올리는 것이 목표이며, 주 1회 클리어에 한해 성공 보상으로 아케인심볼: 츄츄 아일랜드
+      교환권 240개를 획득한다.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="icon">🍳</span>
+        <h4>요리 테마 파티 컨텐츠</h4>
+        <p>단순 사냥이 아닌 "재료 채집 → 조리대 제출 → 완성"이라는 요리 은유를 코어 시스템에 적용</p>
+      </div>
+      <div class="card">
+        <span class="icon">🗺️</span>
+        <h4>지형 활용형 콘텐츠</h4>
+        <p>미니맵 없이 강물의 격류로 구역을 이동하는 츄츄 아일랜드 특유의 지형을 그대로 활용</p>
+      </div>
+      <div class="card">
+        <span class="icon">🔁</span>
+        <h4>짧고 반복 가능한 루틴</h4>
+        <p>1회 플레이 시간이 매우 짧아(숙련자 기준 20~30초대) 빠른 반복 학습과 숙달의 쾌감을 노림</p>
+      </div>
+    </div>
+
+    <div class="nav-foot"><button data-goto="p1">← 이전</button><button data-goto="p3">다음: 재미 요소 분석 →</button></div>
+  </div>
+
+  <!-- PANEL 3 -->
+  <div class="panel" id="p3">
+    <div class="panel-head"><span class="panel-num">03</span><h2>재미(Fun) 요소 분석</h2></div>
+    <p class="panel-desc">이 콘텐츠는 정확히 어디에서 재미가 발생하는가</p>
+
+    <p>
+      배고픈 무토의 재미는 화려한 전투나 서사가 아니라, <b>"제한된 정보 속에서 동선을 짜고, 그 동선을
+      갈고닦아 점점 빨라지는 자신을 확인하는 것"</b>에서 나온다. 이는 정해진 입력을 정확한 박자에 맞추는
+      리듬 게임의 재미와는 본질적으로 다르며, "제한 시간 안에 목표를 최대한 효율적인 동선으로 완수한다"는
+      점에서 타임어택형 미니게임의 재미 구조와 일맥상통하는 지점이 있다.
+    </p>
+
+    <h3>정보 은닉과 패턴 학습</h3>
+    <p>
+      미니맵이 없어 어떤 몬스터가 어느 구역에 나오는지는 오직 학습으로만 파악할 수 있다. 표면적 목표
+      (레시피 완성) 아래에 진짜 학습 목표(지역별 몬스터 분포와 동선)가 숨어 있어, 학습이 끝나는 순간
+      콘텐츠는 완전히 다른 속도로 플레이된다.
+    </p>
+
+    <h3>타임어택과 자기 갱신</h3>
+    <p>
+      과거 하드 난이도에는 30초 컷 업적이 있었고, 지금도 20초대 초반 클리어 영상이 공유될 만큼 스피드런
+      문화가 형성되어 있다. "얼마나 빨리, 얼마나 깔끔한 동선으로 클리어하는가"가 별도의 목표로 기능해,
+      숙련자에게도 반복 플레이 동기를 제공한다.
+    </p>
+
+    <h3>협동과 역할 분담</h3>
+    <p>
+      파티원이 서로 다른 구역에서 재료를 모아와야 하므로 자연스럽게 역할 분담이 발생한다. 재료를 잘못
+      주우면 기존 재료가 초기화되는 페널티는 팀원 간 의사소통과 개인의 신중함을 동시에 요구한다.
+    </p>
+
+    <h3>성장의 가시화 - 무토의 게이지</h3>
+    <p>
+      요리를 완성할 때마다 무토 게이지가 실시간으로 차오르고, 2/3를 넘으면 몬스터가 상위종으로 강화된다.
+      협동 성과가 즉각적인 시각·수치 피드백으로 돌아와 파티의 진행 상황을 매 순간 확인할 수 있게 한다.
+    </p>
+
+    <div class="nav-foot"><button data-goto="p2">← 이전</button><button data-goto="p4">다음: 지역 연관성 →</button></div>
+  </div>
+
+  <!-- PANEL 4 -->
+  <div class="panel" id="p4">
+    <div class="panel-head"><span class="panel-num">04</span><h2>지역(츄츄 아일랜드)과의 연관성</h2></div>
+    <p class="panel-desc">왜 하필 이 지역에서, 이 규칙으로 만들어졌는가</p>
+
+    <p>
+      배고픈 무토는 관련 NPC가 홈타운이 아닌 필드 인접 지역에 위치한, 아케인리버 콘텐츠 중에서도 이례적인
+      사례다. 이는 <b>"츄츄 아일랜드라는 공간 자체가 콘텐츠의 재료"</b>라는 설계 의도로 읽을 수 있다.
+    </p>
+
+    <h3>세계관·서사적 연결</h3>
+    <p>
+      츄츄 아일랜드는 정령 '무토'와 침략자 '굴라'가 대립하는 배경 서사를 가진다. 배고픈 무토는 이를
+      "무토가 굴라와 싸우는 동안 필요한 음식을 대신 조달해준다"는 형태로 재현하며, 보상 재화(아케인심볼)도
+      "무토와 굴라가 싸우는 도중 떨어져 나온 것"으로 서술해 보상의 명분까지 지역 서사에 종속시킨다.
+    </p>
+
+    <h3>지형·이동 시스템의 연결</h3>
+    <p>
+      츄츄 아일랜드는 밧줄·사다리와 함께 강물의 격류가 이동 수단으로 쓰이는, 이 지역만의 고유한 이동 체계를
+      가진 지역이다. 배고픈 무토는 이 특성을 그대로
+      콘텐츠의 이동 메커니즘으로 차용해, 중앙 조리대를 기준으로 사방에 흩어진 채집 구역을 격류로 순환
+      이동하도록 설계했다. 결과적으로 이 지역에서만 통용되는 이동 감각(더블 점프, 블링크형 이동기의 가치)이
+      콘텐츠 난이도를 가장 크게 좌우한다.
+    </p>
+
+    <h3>자원(몬스터) 재활용을 통한 지역감</h3>
+    <table>
+      <tr><th>지역 몬스터</th><th>드롭 재료</th><th>강화(상위종)</th></tr>
+      <tr><td>파인디어</td><td>발굽</td><td>큰뿔 파인디어</td></tr>
+      <tr><td>유나나</td><td>껍질</td><td>램나나</td></tr>
+      <tr><td>플리온</td><td>갈기</td><td>성난 플리온</td></tr>
+      <tr><td>설익은 울프룻</td><td>물갈퀴</td><td>잘 익은 울프룻</td></tr>
+      <tr><td>그린 캣피시</td><td>등껍질</td><td>블루 캣피시</td></tr>
+      <tr><td>라이터틀</td><td>발바닥</td><td>대장 라이터틀</td></tr>
+      <tr><td>크릴라 / 버샤크</td><td>깃털 / 발톱</td><td>족장 크릴라 / 족장 버샤크</td></tr>
+      <tr><td>츄릅나무 (희귀 리젠)</td><td>츄릅열매</td><td>-</td></tr>
+    </table>
+    <p class="footnote">→ 필드 몬스터를 그대로 재료 공급원으로 재활용해, 전용 몬스터 세트 없이도 지역 생태를 콘텐츠 안으로 옮겨왔다.</p>
+
+    <div class="nav-foot"><button data-goto="p3">← 이전</button><button data-goto="p5">다음: 코어 루프 →</button></div>
+  </div>
+
+  <!-- PANEL 5 -->
+  <div class="panel" id="p5">
+    <div class="panel-head"><span class="panel-num">05</span><h2>코어 루프 (Core Loop)</h2></div>
+    <p class="panel-desc">유저는 실제로 무엇을 반복하는가</p>
+
+    <p>
+      코어 루프는 <b>"레시피 확인 → 구역 이동 → 재료 채집 → 조리대 제출 → 게이지 피드백"</b> 5단계로
+      짧게 순환하며, 이 사이클 하나가 수 초 내에 완결된다는 점이 콘텐츠 밀도의 핵심이다.
+    </p>
+
+    <div class="loop-wrap">
+      <div class="loop-node">① 레시피 확인<span class="sub">필요 재료 파악</span></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">② 구역 이동<span class="sub">격류 타고 채집처로</span></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">③ 재료 채집<span class="sub">몬스터 처치 · 직접 줍기</span></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">④ 조리대 제출<span class="sub">보너스 타임 내 완성</span></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node">⑤ 게이지 피드백<span class="sub">무토 우세 / 몬스터 강화</span></div>
+      <div class="loop-return">↺ 무토 게이지가 가득 찰 때까지 반복</div>
+    </div>
+
+    <h3>단계별 설계 의도</h3>
+    <div class="flow">
+      <div class="flow-step"><div class="num">1</div><div class="body">
+        <h4>레시피 확인 - 매번 갱신되는 목표</h4>
+        <p>레시피가 랜덤으로 제시되어 동일한 동선을 그대로 외워 반복하는 것을 방지하고 매 판 약간의 재해석을 요구한다.</p>
+      </div></div>
+      <div class="flow-step"><div class="num">2</div><div class="body">
+        <h4>구역 이동 - 숙련도가 곧 성능</h4>
+        <p>미니맵 부재 + 격류 이동 제약이 결합되어, 직업 고유 이동기 활용도가 클리어 타임을 가장 크게 좌우한다.</p>
+      </div></div>
+      <div class="flow-step"><div class="num">3</div><div class="body">
+        <h4>재료 채집 - 손실 위험을 동반한 선택</h4>
+        <p>펫 자동 줍기가 막혀 있고, 다른 재료를 잘못 주우면 기존 재료가 초기화된다. 매 순간이 작은 리스크 판단이다.</p>
+      </div></div>
+      <div class="flow-step"><div class="num">4</div><div class="body">
+        <h4>조리대 제출 - 타이밍 보너스</h4>
+        <p>레시피별 보너스 완성 시간 내 제출 시 '퍼펙트' 발생, 게이지 상승폭이 커진다.</p>
+      </div></div>
+      <div class="flow-step"><div class="num">5</div><div class="body">
+        <h4>게이지 피드백 - 난이도의 동적 조정</h4>
+        <p>게이지가 2/3를 넘으면 몬스터가 상위종으로 강화되어, 파티 진행 속도에 맞춰 긴장감을 재조정한다.</p>
+      </div></div>
+    </div>
+
+    <h3>루프를 지탱하는 3가지 제약 장치</h3>
+    <table>
+      <tr><th>제약 장치</th><th>내용</th><th>루프에 미치는 효과</th></tr>
+      <tr><td><span class="tag">정보 제약</span></td><td>미니맵 없음, 재료 위치는 학습으로만 파악</td><td>초회 혼란 → 반복을 통한 숙달 곡선 형성</td></tr>
+      <tr><td><span class="tag green">시간 제약</span></td><td>레시피별 보너스 완성 타임 존재</td><td>단순 완주가 아닌 '효율적 완주'로 목표 격상</td></tr>
+      <tr><td><span class="tag">손실 제약</span></td><td>펫 줍기 불가 + 재료 중복 습득 시 초기화</td><td>매 순간 판단을 요구, 루프가 '작업'이 아닌 '플레이'가 되게 함</td></tr>
+    </table>
+
+    <div class="nav-foot"><button data-goto="p4">← 이전</button><button data-goto="p6">다음: 종합 평가 →</button></div>
+  </div>
+
+  <!-- PANEL 6 -->
+  <div class="panel" id="p6">
+    <div class="panel-head"><span class="panel-num">06</span><h2>종합 평가 및 시사점</h2></div>
+    <p class="panel-desc">잘된 점을 중심으로, 짧은 개선 포인트와 결론</p>
+
+    <div class="card-grid" style="grid-template-columns: 1fr;">
+      <div class="card" style="background: var(--accent2-soft); border-color:#bcd8c8;">
+        <h4>✅ 잘 설계된 지점</h4>
+        <ul class="plain" style="margin-top:8px;">
+          <li>지역 고유 이동 시스템(격류)을 콘텐츠 규칙으로 승격, 별도 학습 비용 없이 지역감 유지</li>
+          <li>매우 짧은 코어 루프로 실패해도 즉시 재도전 가능한 낮은 좌절 비용</li>
+          <li>게이지 기반 동적 난이도 조정으로 자연스러운 긴장감 형성</li>
+          <li>재료 분산 배치로 파티 역할 분담이 자발적으로 발생</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>추후 개선 포인트 (간단 정리)</h3>
+    <p>위 장점들이 전제하고 있는 "그룹별 재료 요구량 차이"와 "실시간 피드백 구조"를 07장 데이터와 대조했을 때, 다음 두 가지 정도는 후속 검토가 필요해 보인다.</p>
+    <ul class="plain">
+      <li>레시피 그룹(A/B/C)별 재료 요구량 차이가 존재하는 만큼, 보상에도 그룹별 차등을 둘지 검토</li>
+      <li>채집 실패(소멸·오습득) 시 진행도가 즉시 초기화되는 구조를 완충할 장치가 필요한지 검토</li>
+    </ul>
+
+    <h3>역기획 관점 결론</h3>
+    <p>
+      배고픈 무토는 <b>"짧은 코어 루프 + 지역 특화 이동 규칙 + 실시간 시각 피드백"</b>, 이 세 가지가
+      맞물려 완성도 높은 반복 콘텐츠를 만든 사례다. 새로운 시스템을 발명하기보다 기존 필드의 지형·몬스터·
+      이동 방식을 재조합해 지역 몰입도와 개발 효율을 동시에 확보한 점이 이 콘텐츠의 핵심 설계 포인트다.
+    </p>
+
+    <div class="nav-foot"><button data-goto="p5">← 이전</button><button data-goto="p7">다음: 데이터 테이블 →</button></div>
+  </div>
+
+  <!-- PANEL 7 : 데이터 테이블 -->
+  <div class="panel" id="p7">
+    <div class="panel-head"><span class="panel-num">07</span><h2>데이터 테이블</h2></div>
+    <p class="panel-desc">DB 테이블 스키마 형태의 실제 기획 데이터 정의 - 테이블 / 필드 / 타입 / 관계</p>
+
+    <p class="lead">
+      각 표는 하나의 데이터 테이블을 의미하며, 필드명 / 타입 (int, float, string, bool, enum) / PK·FK
+      관계로 구성했다. 표기 기준은 다음과 같다: 공식 자료로 확인된 값은 그대로, <span class="placeholder">임의값</span>은
+      밸런싱 이전 프로토타입용으로 이 문서에서 임의로 지정한 값, <span class="tbd">TBD</span>는 아직 값
+      자체를 채우지 못한 필드다.
+    </p>
+
+    <!-- TABLE 1: QuestConfig -->
+    <div class="schema-title">
+      <span class="tbl-name">MutoQuestConfig</span>
+      <span class="tbl-desc">퀘스트 전역 설정 (싱글 row 설정 테이블)</span>
+    </div>
+    <table class="schema">
+      <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값</th></tr>
+      <tr><td class="fname"><span class="key-pk">PK</span>QuestID</td><td><span class="dtype int">int</span></td><td>퀘스트 고유 ID</td><td>1001</td></tr>
+      <tr><td class="fname">QuestName</td><td><span class="dtype string">string</span></td><td>퀘스트명</td><td>"배고픈 무토"</td></tr>
+      <tr><td class="fname">RequiredLevel</td><td><span class="dtype int">int</span></td><td>입장 최소 레벨</td><td>210</td></tr>
+      <tr><td class="fname">RequiredArcaneForce</td><td><span class="dtype int">int</span></td><td>입장 요구 아케인포스</td><td>100</td></tr>
+      <tr><td class="fname">MinPartySize</td><td><span class="dtype int">int</span></td><td>최소 파티 인원 (파티 미구성 시 입장 불가)</td><td>2</td></tr>
+      <tr><td class="fname">MaxPartySize</td><td><span class="dtype int">int</span></td><td>최대 파티 인원</td><td>4</td></tr>
+      <tr><td class="fname">ResetCycle</td><td><span class="dtype enum">enum</span></td><td>초기화 주기 (Daily / Weekly)</td><td>Weekly</td></tr>
+      <tr><td class="fname">ResetDayOfWeek</td><td><span class="dtype enum">enum</span></td><td>초기화 요일 (Mon~Sun)</td><td>Thu</td></tr>
+      <tr><td class="fname">MaxClearPerCycle</td><td><span class="dtype int">int</span></td><td>주기당 보상 인정 클리어 횟수</td><td>1</td></tr>
+      <tr><td class="fname">GaugeUpgradeThreshold</td><td><span class="dtype float">float</span></td><td>몬스터 상위종 전환 게이지 임계치 (0.0~1.0)</td><td>0.667</td></tr>
+      <tr><td class="fname">ItemDespawnTime_Sec</td><td><span class="dtype float">float</span></td><td>드롭 아이템 미획득 시 소멸 시간(초)</td><td>5.0</td></tr>
+      <tr><td class="fname">PetAutoLootEnabled</td><td><span class="dtype bool">bool</span></td><td>펫 자동 줍기 허용 여부</td><td>false</td></tr>
+      <tr><td class="fname">MismatchResetsProgress</td><td><span class="dtype bool">bool</span></td><td>진행 중인 레시피와 다른 재료 습득 시 초기화 여부</td><td>true</td></tr>
+    </table>
+
+    <!-- TABLE 2: Ingredient -->
+    <div class="schema-title">
+      <span class="tbl-name">MutoIngredient</span>
+      <span class="tbl-desc">재료 마스터 테이블</span>
+    </div>
+    <table class="schema">
+      <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값 (ID=I01)</th></tr>
+      <tr><td class="fname"><span class="key-pk">PK</span>IngredientID</td><td><span class="dtype string">string</span></td><td>재료 고유 ID</td><td>"I01"</td></tr>
+      <tr><td class="fname">IngredientName</td><td><span class="dtype string">string</span></td><td>재료명</td><td>"발굽"</td></tr>
+      <tr><td class="fname"><span class="key-fk">FK</span>DropMonsterID</td><td><span class="dtype string">string</span></td><td>드롭 몬스터 참조 (→ MutoMonster.MonsterID)</td><td>"M01"</td></tr>
+      <tr><td class="fname">IsRareMaterial</td><td><span class="dtype bool">bool</span></td><td>희귀 재료(별도 리젠 개체 드롭) 여부</td><td>false</td></tr>
+    </table>
+    <table class="schema">
+      <tr><th>IngredientID</th><th>IngredientName</th><th>DropMonsterID</th><th>IsRareMaterial</th></tr>
+      <tr><td>I01</td><td>발굽</td><td>M01</td><td>false</td></tr>
+      <tr><td>I02</td><td>갈기</td><td>M02</td><td>false</td></tr>
+      <tr><td>I03</td><td>물갈퀴</td><td>M03</td><td>false</td></tr>
+      <tr><td>I04</td><td>등껍질</td><td>M04</td><td>false</td></tr>
+      <tr><td>I05</td><td>발바닥</td><td>M05</td><td>false</td></tr>
+      <tr><td>I06</td><td>깃털</td><td>M06</td><td>false</td></tr>
+      <tr><td>I07</td><td>발톱</td><td>M07</td><td>false</td></tr>
+      <tr><td>I08</td><td>츄릅열매</td><td>M08</td><td>true</td></tr>
+      <tr><td>I09</td><td>껍질</td><td>M09</td><td>false</td></tr>
+    </table>
+    <p class="footnote">→ I09(껍질)의 드롭 몬스터는 유나나(일반) / 램나나(상위종)로 확인됨.</p>
+
+    <!-- TABLE 3: Monster -->
+    <div class="schema-title">
+      <span class="tbl-name">MutoMonster</span>
+      <span class="tbl-desc">필드 몬스터 마스터 (일반종/상위종 자기참조 구조)</span>
+    </div>
+    <table class="schema">
+      <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값</th></tr>
+      <tr><td class="fname"><span class="key-pk">PK</span>MonsterID</td><td><span class="dtype string">string</span></td><td>몬스터 고유 ID</td><td>"M01"</td></tr>
+      <tr><td class="fname">MonsterName</td><td><span class="dtype string">string</span></td><td>몬스터명</td><td>"파인디어"</td></tr>
+      <tr><td class="fname">Tier</td><td><span class="dtype enum">enum</span></td><td>Normal / Upgraded</td><td>Normal</td></tr>
+      <tr><td class="fname"><span class="key-fk">FK</span>UpgradeFromID</td><td><span class="dtype string">string</span></td><td>자기참조 FK. 이 몬스터가 어떤 일반종의 상위종인지 (→ MutoMonster.MonsterID, nullable)</td><td>null</td></tr>
+      <tr><td class="fname">HP</td><td><span class="dtype int">int</span></td><td>체력 (정식 밸런스 수치 비공개로 임의값 부여)</td><td class="placeholder">100</td></tr>
+      <tr><td class="fname">SpawnZone</td><td><span class="dtype enum">enum</span></td><td>출현 구역 (Left / Right / Central)</td><td>Left</td></tr>
+    </table>
+    <table class="schema">
+      <tr><th>MonsterID</th><th>MonsterName</th><th>Tier</th><th>UpgradeFromID</th><th>HP</th></tr>
+      <tr><td>M01</td><td>파인디어</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M01U</td><td>큰뿔 파인디어</td><td>Upgraded</td><td>M01</td><td class="placeholder">100</td></tr>
+      <tr><td>M02</td><td>플리온</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M02U</td><td>성난 플리온</td><td>Upgraded</td><td>M02</td><td class="placeholder">100</td></tr>
+      <tr><td>M03</td><td>설익은 울프룻</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M03U</td><td>잘 익은 울프룻</td><td>Upgraded</td><td>M03</td><td class="placeholder">100</td></tr>
+      <tr><td>M04</td><td>그린 캣피시</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M04U</td><td>블루 캣피시</td><td>Upgraded</td><td>M04</td><td class="placeholder">100</td></tr>
+      <tr><td>M05</td><td>라이터틀</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M05U</td><td>대장 라이터틀</td><td>Upgraded</td><td>M05</td><td class="placeholder">100</td></tr>
+      <tr><td>M06</td><td>크릴라</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M06U</td><td>족장 크릴라</td><td>Upgraded</td><td>M06</td><td class="placeholder">100</td></tr>
+      <tr><td>M07</td><td>버샤크</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M07U</td><td>족장 버샤크</td><td>Upgraded</td><td>M07</td><td class="placeholder">100</td></tr>
+      <tr><td>M08</td><td>츄릅나무</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M09</td><td>유나나</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
+      <tr><td>M09U</td><td>램나나</td><td>Upgraded</td><td>M09</td><td class="placeholder">100</td></tr>
+    </table>
+    <p class="footnote">→ 모든 몬스터의 HP는 정식 밸런스 수치가 비공개라 개발 편의상 <span class="placeholder">100</span>으로 통일해 임의 지정함. 실제 구현 시 몬스터별 난이도에 맞춰 재조정 필요.</p>
+
+    <!-- TABLE 4: Recipe -->
+    <div class="schema-title">
+      <span class="tbl-name">MutoRecipe</span>
+      <span class="tbl-desc">레시피 마스터 (재료 슬롯 4개 + 자기참조 대칭쌍)</span>
+    </div>
+    <table class="schema">
+      <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값</th></tr>
+      <tr><td class="fname"><span class="key-pk">PK</span>RecipeID</td><td><span class="dtype string">string</span></td><td>레시피 고유 ID</td><td>"R05"</td></tr>
+      <tr><td class="fname">RecipeName</td><td><span class="dtype string">string</span></td><td>레시피명</td><td>"이런면"</td></tr>
+      <tr><td class="fname">RecipeGroup</td><td><span class="dtype enum">enum</span></td><td>재료 개수 그룹 (A=2종 / B=3종 / C=4종+희귀)</td><td>B</td></tr>
+      <tr><td class="fname"><span class="key-fk">FK</span>Ingredient1_ID / Qty1</td><td><span class="dtype string">string</span> / <span class="dtype int">int</span></td><td>재료 슬롯1 (→ MutoIngredient.IngredientID)</td><td>"I01" / 5</td></tr>
+      <tr><td class="fname"><span class="key-fk">FK</span>Ingredient2_ID / Qty2</td><td><span class="dtype string">string</span> / <span class="dtype int">int</span></td><td>재료 슬롯2 (nullable)</td><td>"I02" / 5</td></tr>
+      <tr><td class="fname"><span class="key-fk">FK</span>Ingredient3_ID / Qty3</td><td><span class="dtype string">string</span> / <span class="dtype int">int</span></td><td>재료 슬롯3 (nullable)</td><td>"I03" / 10</td></tr>
+      <tr><td class="fname"><span class="key-fk">FK</span>Ingredient4_ID / Qty4</td><td><span class="dtype string">string</span> / <span class="dtype int">int</span></td><td>재료 슬롯4 (nullable, 그룹 C의 츄릅열매 전용 슬롯)</td><td>null</td></tr>
+      <tr><td class="fname"><span class="key-fk">FK</span>PairedRecipeID</td><td><span class="dtype string">string</span></td><td>자기참조 FK. 동일 재료를 쓰는 대칭 레시피 (→ MutoRecipe.RecipeID, nullable)</td><td>"R06"</td></tr>
+      <tr><td class="fname">BonusTimeLimit_Sec</td><td><span class="dtype float">float</span></td><td>보너스(퍼펙트) 판정 기준 제한시간(초). 레시피마다 값이 다르므로 본 테이블에 개별 지정</td><td class="placeholder">55.0</td></tr>
+      <tr><td class="fname">GaugeGain_Normal</td><td><span class="dtype float">float</span></td><td><b>CompletionTime &gt; BonusTimeLimit_Sec</b>일 때(제한시간을 넘겨 완성) 적용되는 게이지 상승폭 (0.0~1.0)</td><td class="placeholder">0.07</td></tr>
+      <tr><td class="fname">GaugeGain_Perfect</td><td><span class="dtype float">float</span></td><td><b>CompletionTime ≤ BonusTimeLimit_Sec</b>일 때(제한시간 이전 완성) 적용되는 게이지 상승폭 (0.0~1.0)</td><td class="placeholder">0.11</td></tr>
+    </table>
+    <p class="footnote">
+      → 게이지 상승 판정 로직: <code>if (CompletionTime ≤ BonusTimeLimit_Sec) then GaugeGain_Perfect else GaugeGain_Normal</code>.
+      즉 제한시간 "이전"에 제출하면 Perfect, "이후"에 제출하면 Normal이 적용된다.
+    </p>
+    <table class="schema">
+      <tr><th>RecipeID</th><th>RecipeName</th><th>Group</th><th>Ingredient1</th><th>Ingredient2</th><th>Ingredient3</th><th>Ingredient4</th><th>PairedRecipeID</th><th>BonusTimeLimit_Sec</th><th>GaugeGain_Normal</th><th>GaugeGain_Perfect</th></tr>
+      <tr><td>R01</td><td>깔깔만두</td><td>A</td><td>I09×5</td><td>I05×10</td><td>-</td><td>-</td><td>R03</td><td class="placeholder">35.0</td><td class="placeholder">0.05</td><td class="placeholder">0.08</td></tr>
+      <tr><td>R02</td><td>낄낄볶음밥</td><td>A</td><td>I01×5</td><td>I02×10</td><td>-</td><td>-</td><td>R04</td><td class="placeholder">35.0</td><td class="placeholder">0.05</td><td class="placeholder">0.08</td></tr>
+      <tr><td>R03</td><td>앗볶음</td><td>A</td><td>I09×5</td><td>I05×10</td><td>-</td><td>-</td><td>R01</td><td class="placeholder">35.0</td><td class="placeholder">0.05</td><td class="placeholder">0.08</td></tr>
+      <tr><td>R04</td><td>헉튀김</td><td>A</td><td>I01×5</td><td>I02×10</td><td>-</td><td>-</td><td>R02</td><td class="placeholder">35.0</td><td class="placeholder">0.05</td><td class="placeholder">0.08</td></tr>
+      <tr><td>R05</td><td>이런면</td><td>B</td><td>I01×5</td><td>I02×5</td><td>I03×10</td><td>-</td><td>R06</td><td class="placeholder">55.0</td><td class="placeholder">0.07</td><td class="placeholder">0.11</td></tr>
+      <tr><td>R06</td><td>휴피자</td><td>B</td><td>I01×5</td><td>I02×5</td><td>I03×10</td><td>-</td><td>R05</td><td class="placeholder">55.0</td><td class="placeholder">0.07</td><td class="placeholder">0.11</td></tr>
+      <tr><td>R07</td><td>저런찜</td><td>B</td><td>I09×5</td><td>I05×5</td><td>I04×10</td><td>-</td><td>R08</td><td class="placeholder">55.0</td><td class="placeholder">0.07</td><td class="placeholder">0.11</td></tr>
+      <tr><td>R08</td><td>하빵</td><td>B</td><td>I09×5</td><td>I05×5</td><td>I04×10</td><td>-</td><td>R07</td><td class="placeholder">55.0</td><td class="placeholder">0.07</td><td class="placeholder">0.11</td></tr>
+      <tr><td>R09</td><td>허허말이</td><td>B</td><td>I02×5</td><td>I03×5</td><td>I06×10</td><td>-</td><td>R10</td><td class="placeholder">60.0</td><td class="placeholder">0.07</td><td class="placeholder">0.11</td></tr>
+      <tr><td>R10</td><td>오잉피클</td><td>B</td><td>I02×5</td><td>I03×5</td><td>I06×10</td><td>-</td><td>R09</td><td class="placeholder">60.0</td><td class="placeholder">0.07</td><td class="placeholder">0.11</td></tr>
+      <tr><td>R11</td><td>호호탕</td><td>B</td><td>I03×5</td><td>I04×5</td><td>I07×10</td><td>-</td><td>R12</td><td class="placeholder">65.0</td><td class="placeholder">0.07</td><td class="placeholder">0.11</td></tr>
+      <tr><td>R12</td><td>큭큭죽</td><td>B</td><td>I03×5</td><td>I04×5</td><td>I07×10</td><td>-</td><td>R11</td><td class="placeholder">65.0</td><td class="placeholder">0.07</td><td class="placeholder">0.11</td></tr>
+      <tr><td>R13</td><td>크헉구이</td><td>C</td><td>I08×1</td><td>I09×5</td><td>I05×5</td><td>I06×10</td><td>R14</td><td class="placeholder">80.0</td><td class="placeholder">0.10</td><td class="placeholder">0.15</td></tr>
+      <tr><td>R14</td><td>흑흑화채</td><td>C</td><td>I08×1</td><td>I09×5</td><td>I05×5</td><td>I06×10</td><td>R13</td><td class="placeholder">80.0</td><td class="placeholder">0.10</td><td class="placeholder">0.15</td></tr>
+      <tr><td>R15</td><td>으악샐러드</td><td>C</td><td>I08×1</td><td>I02×5</td><td>I04×5</td><td>I07×10</td><td>R16</td><td class="placeholder">90.0</td><td class="placeholder">0.10</td><td class="placeholder">0.15</td></tr>
+      <tr><td>R16</td><td>엉엉순대</td><td>C</td><td>I08×1</td><td>I02×5</td><td>I04×5</td><td>I07×10</td><td>R15</td><td class="placeholder">90.0</td><td class="placeholder">0.10</td><td class="placeholder">0.15</td></tr>
+    </table>
+    <p class="footnote">
+      → BonusTimeLimit_Sec·GaugeGain 값은 모두 <span class="placeholder">임의값</span>이다. 그룹 A(재료 2종)는
+      기본 35초 / 그룹 B(3종)는 55~65초 / 그룹 C(4종+희귀 재료)는 80~90초로, 재료 종류가 많고 이동 동선이
+      길어질수록 제한시간과 게이지 획득량을 함께 늘리는 방향으로 설정했다. 실제 서비스 값과는 다를 수 있으며
+      밸런싱 단계에서 재조정이 필요하다. 또한 R01/R03, R02/R04는 재료 구성이 동일해 그룹 B의 대칭쌍과 같은
+      방식으로 PairedRecipeID를 상호 지정했다.
+    </p>
+
+    <!-- TABLE 5: Reward -->
+    <div class="schema-title">
+      <span class="tbl-name">MutoReward</span>
+      <span class="tbl-desc">보상 테이블 (QuestID 참조)</span>
+    </div>
+    <table class="schema">
+      <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값</th></tr>
+      <tr><td class="fname"><span class="key-pk">PK</span>RewardID</td><td><span class="dtype int">int</span></td><td>보상 고유 ID</td><td>1</td></tr>
+      <tr><td class="fname"><span class="key-fk">FK</span>QuestID</td><td><span class="dtype int">int</span></td><td>퀘스트 참조 (→ MutoQuestConfig.QuestID)</td><td>1001</td></tr>
+      <tr><td class="fname">RewardType</td><td><span class="dtype enum">enum</span></td><td>ClearReward / DailyComboBonus</td><td>ClearReward</td></tr>
+      <tr><td class="fname">RewardItemID</td><td><span class="dtype string">string</span></td><td>보상 아이템 ID</td><td>"ITEM_ARCANE_SYMBOL_CHUCHU"</td></tr>
+      <tr><td class="fname">RewardItemName</td><td><span class="dtype string">string</span></td><td>보상 아이템명</td><td>"아케인심볼: 츄츄 아일랜드"</td></tr>
+      <tr><td class="fname">Quantity</td><td><span class="dtype int">int</span></td><td>지급 개수</td><td>240</td></tr>
+      <tr><td class="fname">IsTradable</td><td><span class="dtype bool">bool</span></td><td>거래 가능 여부</td><td>false</td></tr>
+    </table>
+    <table class="schema">
+      <tr><th>RewardID</th><th>QuestID</th><th>RewardType</th><th>RewardItemName</th><th>Quantity</th><th>IsTradable</th></tr>
+      <tr><td>1</td><td>1001</td><td>ClearReward</td><td>아케인심볼: 츄츄 아일랜드</td><td>240</td><td>false</td></tr>
+      <tr><td>2</td><td>1001</td><td>DailyComboBonus</td><td>아케인심볼: 츄츄 아일랜드 (일퀘 병행 주간 합산)</td><td>520 (합산 총량)</td><td>false</td></tr>
+    </table>
+
+    <!-- ERD -->
+    <div class="schema-title">
+      <span class="tbl-name">Relation</span>
+      <span class="tbl-desc">테이블 간 참조 관계 (텍스트 ERD)</span>
+    </div>
+    <div class="erd">MutoQuestConfig (QuestID)
+  └─<span class="arrow">1:N</span>→ MutoReward.<span class="field">QuestID</span>
+
+MutoRecipe (RecipeID)
+  ├─<span class="arrow">N:1</span>→ MutoIngredient.<span class="field">IngredientID</span>  (Ingredient1~4_ID)
+  └─<span class="arrow">1:1</span>→ MutoRecipe.<span class="field">RecipeID</span>  (PairedRecipeID, self FK)
+
+MutoIngredient (IngredientID)
+  └─<span class="arrow">N:1</span>→ MutoMonster.<span class="field">MonsterID</span>  (DropMonsterID)
+
+MutoMonster (MonsterID)
+  └─<span class="arrow">1:1</span>→ MutoMonster.<span class="field">MonsterID</span>  (UpgradeFromID, self FK)</div>
+
+    <!-- Placeholder 정리 -->
+    <div class="schema-title">
+      <span class="tbl-name">Placeholder Value List</span>
+      <span class="tbl-desc">공식 수치가 비공개라 이 문서에서 임의로 지정한 값 목록</span>
+    </div>
+    <table class="schema">
+      <tr><th>테이블</th><th>필드</th><th>지정값</th><th>비고</th></tr>
+      <tr><td>MutoMonster</td><td>HP</td><td class="placeholder">전 몬스터 100</td><td>정식 밸런스 수치 비공개로 개발 편의상 통일 지정</td></tr>
+      <tr><td>MutoRecipe</td><td>BonusTimeLimit_Sec</td><td class="placeholder">그룹별 35 / 55~65 / 80~90초</td><td>재료 종류 수(그룹)에 비례하도록 임의 산정</td></tr>
+      <tr><td>MutoRecipe</td><td>GaugeGain_Normal / GaugeGain_Perfect</td><td class="placeholder">그룹별 0.05~0.10 / 0.08~0.15</td><td>Perfect는 Normal 대비 약 1.5배로 임의 산정</td></tr>
+    </table>
+    <p class="footnote">→ 위 값은 전부 프로토타입 진행을 위한 임의 지정값이며, 실제 서비스 밸런스와 다를 수 있다. 정식 반영 전 인게임 실측 또는 공식 자료 확인이 필요하다.</p>
+
+    <div class="nav-foot"><button data-goto="p6">← 이전</button><span class="spacer"></span></div>
+  </div>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.panel');
+
+  function activate(id){
+    panels.forEach(p => p.classList.toggle('active', p.id === id));
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.target === id));
+    document.querySelector('.sheet').scrollIntoView({behavior:'instant', block:'start'});
+  }
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => activate(btn.dataset.target));
+  });
+
+  document.querySelectorAll('[data-goto]').forEach(btn => {
+    btn.addEventListener('click', () => activate(btn.dataset.goto));
+  });
+</script>
+
+</body>
+</html>
