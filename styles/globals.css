@@ -644,12 +644,24 @@ button {
 
 /* ============ Quick stats (hero) ============ */
 .stat-row {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.stat-row-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 20px;
+}
+
+.stat-row-items {
   display: flex;
   flex-wrap: wrap;
   gap: 36px;
-  margin-top: 48px;
-  padding-top: 30px;
-  border-top: 1px solid var(--line);
 }
 
 .stat-num {
@@ -798,7 +810,7 @@ button {
   .featured-grid {
     grid-template-columns: 1fr;
   }
-  .stat-row {
+  .stat-row-items {
     gap: 24px;
   }
   .project-meta-grid {

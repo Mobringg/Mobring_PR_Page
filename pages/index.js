@@ -41,16 +41,19 @@ export default function Home() {
           </div>
 
           <div className="stat-row">
-            <div className="stat-item">
-              <div className="stat-num">{String(TOTAL_PROJECT_COUNT).padStart(2, "0")}</div>
-              <div className="stat-label">포트폴리오 문서</div>
-            </div>
-            {CATEGORY_STATS.map((c) => (
-              <div className="stat-item" key={c.category}>
-                <div className="stat-num">{String(c.count).padStart(2, "0")}</div>
-                <div className="stat-label">{c.category}</div>
+            <p className="stat-row-title">작업 문서 현황</p>
+            <div className="stat-row-items">
+              <div className="stat-item">
+                <div className="stat-num">{String(TOTAL_PROJECT_COUNT).padStart(2, "0")}</div>
+                <div className="stat-label">포트폴리오 문서</div>
               </div>
-            ))}
+              {CATEGORY_STATS.map((c) => (
+                <div className="stat-item" key={c.category}>
+                  <div className="stat-num">{String(c.count).padStart(2, "0")}</div>
+                  <div className="stat-label">{c.category}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
