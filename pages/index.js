@@ -1,8 +1,22 @@
 import Link from "next/link";
 import SkillBar from "@/components/SkillBar";
-import { SITE, STRENGTHS, SKILLS, PLAYED_GAMES } from "@/lib/data";
+import {
+  SITE,
+  STRENGTHS,
+  SKILLS,
+  PLAYED_GAMES,
+  PROJECTS,
+  FEATURED_PROJECT_IDS,
+  CORE_COMPETENCIES,
+  CATEGORY_STATS,
+  TOTAL_PROJECT_COUNT,
+} from "@/lib/data";
 
 export default function Home() {
+  const featured = FEATURED_PROJECT_IDS.map((id) =>
+    PROJECTS.find((p) => p.id === id)
+  ).filter(Boolean);
+
   return (
     <>
       <section className="hero">
@@ -25,6 +39,51 @@ export default function Home() {
               자기소개서 읽기
             </Link>
           </div>
+
+          <div className="stat-row">
+            <div className="stat-item">
+              <div className="stat-num">{String(TOTAL_PROJECT_COUNT).padStart(2, "0")}</div>
+              <div className="stat-label">포트폴리오 문서</div>
+            </div>
+            {CATEGORY_STATS.map((c) => (
+              <div className="stat-item" key={c.category}>
+                <div className="stat-num">{String(c.count).padStart(2, "0")}</div>
+                <div className="stat-label">{c.category}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="shell">
+          <p className="section-label">Featured Work</p>
+          <h2 className="section-title">대표 작업물</h2>
+          <p className="section-desc">
+            포트폴리오 중 서로 다른 역량을 보여주는 두 문서를 먼저 소개합니다.
+          </p>
+          <div className="featured-grid">
+            {featured.map((p) => (
+              <a
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="featured-card"
+                key={p.id}
+              >
+                <div className="featured-card-head">
+                  <span className="featured-category">{p.category}</span>
+                  <span className="featured-arrow">↗</span>
+                </div>
+                <h3 className="featured-title">{p.title}</h3>
+                <p className="featured-summary">{p.summary}</p>
+                <div className="featured-genre">{p.genre}</div>
+              </a>
+            ))}
+          </div>
+          <Link href="/portfolio" className="btn btn-ghost" style={{ marginTop: 26 }}>
+            포트폴리오 전체 보기 →
+          </Link>
         </div>
       </section>
 
@@ -43,6 +102,21 @@ export default function Home() {
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="shell">
+          <p className="section-label">Core Competency</p>
+          <h2 className="section-title">다루는 기획 영역</h2>
+          <p className="section-desc">
+            지금까지 작업한 문서들에서 실제로 수행한 기획 업무 범위입니다.
+          </p>
+          <div className="competency-tags">
+            {CORE_COMPETENCIES.map((c) => (
+              <span className="competency-tag" key={c}>{c}</span>
             ))}
           </div>
         </div>

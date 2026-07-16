@@ -322,7 +322,6 @@
   .dtype.int{ background:#dbe6f2; color:#2a5d8f; }
   .dtype.float{ background:#e3dcf2; color:#5a3f96; }
   .dtype.string{ background:#f2e0d8; color:#a4531f; }
-  .dtype.bool{ background:#e0f0e0; color:#2f7a3f; }
   .dtype.enum{ background:#f2e8b8; color:#8a6d00; }
   .key-pk{
     display:inline-block;
@@ -373,6 +372,17 @@
   }
   .erd .arrow{ color:#e0a374; }
   .erd .field{ color:#9fd3b0; }
+
+  .rationale{
+    background:#f4f2fb;
+    border-left:4px solid #7c6fd6;
+    padding:12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size:13px;
+    color:#42394f;
+    margin: 10px 0 16px;
+  }
+  .rationale b{ color:#5842c9; }
 
   .nav-foot{
     display:flex;
@@ -772,8 +782,14 @@
     <div class="panel-head"><span class="panel-num">07</span><h2>데이터 테이블</h2></div>
     <p class="panel-desc">DB 테이블 스키마 형태의 실제 기획 데이터 정의 - 테이블 / 필드 / 타입 / 관계</p>
 
+    <h3>왜 이 장이 필요한가</h3>
+    <p>
+      00~06장이 "이 콘텐츠는 왜 이렇게 설계되었는가"에 대한 답이라면, 07장은 앞서 설계한
+      부분을 구현하기 위한 재료들이다.
+    </p>
+
     <p class="lead">
-      각 표는 하나의 데이터 테이블을 의미하며, 필드명 / 타입 (int, float, string, bool, enum) / PK·FK
+      각 표는 하나의 데이터 테이블을 의미하며, 필드명 / 타입 (int, float, string, enum) / PK·FK
       관계로 구성했다. 표기 기준은 다음과 같다: 공식 자료로 확인된 값은 그대로, <span class="placeholder">임의값</span>은
       밸런싱 이전 프로토타입용으로 이 문서에서 임의로 지정한 값, <span class="tbd">TBD</span>는 아직 값
       자체를 채우지 못한 필드다.
@@ -784,21 +800,28 @@
       <span class="tbl-name">MutoQuestConfig</span>
       <span class="tbl-desc">퀘스트 전역 설정 (싱글 row 설정 테이블)</span>
     </div>
+    <p class="rationale">
+      <b>분류 기준</b> — 이 테이블에는 "레시피나 몬스터 단위가 아니라 콘텐츠 전체에 딱 한 번만
+      적용되는 값"만 모았다. 레시피마다 달라지는 값(제한시간 등)은 MutoRecipe로, 몬스터마다
+      달라지는 값(HP 등)은 MutoMonster로 분리했다. 필드는 다시 세 묶음으로 나뉜다: 입장 조건
+      (RequiredLevel·RequiredArcaneForce·MinPartySize·MaxPartySize), 초기화 주기
+      (ResetCycle·ResetDayOfWeek·MaxClearPerCycle), 콘텐츠 전역 룰(GaugeUpgradeThreshold·
+      ItemDespawnTime_Sec). 이렇게 나눈 이유는 부분적으로 값을 수정할 때, 관련 필드가 어디에
+      모여 있는지 바로 찾을 수 있게 하기 위함이다.
+    </p>
     <table class="schema">
       <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값</th></tr>
       <tr><td class="fname"><span class="key-pk">PK</span>QuestID</td><td><span class="dtype int">int</span></td><td>퀘스트 고유 ID</td><td>1001</td></tr>
       <tr><td class="fname">QuestName</td><td><span class="dtype string">string</span></td><td>퀘스트명</td><td>"배고픈 무토"</td></tr>
       <tr><td class="fname">RequiredLevel</td><td><span class="dtype int">int</span></td><td>입장 최소 레벨</td><td>210</td></tr>
       <tr><td class="fname">RequiredArcaneForce</td><td><span class="dtype int">int</span></td><td>입장 요구 아케인포스</td><td>100</td></tr>
-      <tr><td class="fname">MinPartySize</td><td><span class="dtype int">int</span></td><td>최소 파티 인원 (파티 미구성 시 입장 불가)</td><td>2</td></tr>
+      <tr><td class="fname">MinPartySize</td><td><span class="dtype int">int</span></td><td>최소 파티 인원 (1인 솔로 입장도 가능)</td><td>1</td></tr>
       <tr><td class="fname">MaxPartySize</td><td><span class="dtype int">int</span></td><td>최대 파티 인원</td><td>4</td></tr>
       <tr><td class="fname">ResetCycle</td><td><span class="dtype enum">enum</span></td><td>초기화 주기 (Daily / Weekly)</td><td>Weekly</td></tr>
       <tr><td class="fname">ResetDayOfWeek</td><td><span class="dtype enum">enum</span></td><td>초기화 요일 (Mon~Sun)</td><td>Thu</td></tr>
       <tr><td class="fname">MaxClearPerCycle</td><td><span class="dtype int">int</span></td><td>주기당 보상 인정 클리어 횟수</td><td>1</td></tr>
       <tr><td class="fname">GaugeUpgradeThreshold</td><td><span class="dtype float">float</span></td><td>몬스터 상위종 전환 게이지 임계치 (0.0~1.0)</td><td>0.667</td></tr>
       <tr><td class="fname">ItemDespawnTime_Sec</td><td><span class="dtype float">float</span></td><td>드롭 아이템 미획득 시 소멸 시간(초)</td><td>5.0</td></tr>
-      <tr><td class="fname">PetAutoLootEnabled</td><td><span class="dtype bool">bool</span></td><td>펫 자동 줍기 허용 여부</td><td>false</td></tr>
-      <tr><td class="fname">MismatchResetsProgress</td><td><span class="dtype bool">bool</span></td><td>진행 중인 레시피와 다른 재료 습득 시 초기화 여부</td><td>true</td></tr>
     </table>
 
     <!-- TABLE 2: Ingredient -->
@@ -806,32 +829,47 @@
       <span class="tbl-name">MutoIngredient</span>
       <span class="tbl-desc">재료 마스터 테이블</span>
     </div>
+    <p class="rationale">
+      <b>분류 기준</b> — 이 테이블은 재료의 "정체성"(이름, 드롭 출처)만 담당하고, "어느 레시피에
+      몇 개 쓰이는가"라는 쓰임새는 다루지 않는다. 쓰임새는 MutoRecipe가 IngredientID를 FK로
+      참조하는 방식으로 분리했다. 재료 하나가 여러 레시피에 재사용되는 구조(예: I01 발굽은
+      R02·R04·R05·R06에서 공통으로 쓰임)이기 때문에, 재료 정보를 레시피마다 중복 기재하지 않고
+      한 곳에서만 관리하도록 나눈 것이다.
+    </p>
     <table class="schema">
       <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값 (ID=I01)</th></tr>
       <tr><td class="fname"><span class="key-pk">PK</span>IngredientID</td><td><span class="dtype string">string</span></td><td>재료 고유 ID</td><td>"I01"</td></tr>
       <tr><td class="fname">IngredientName</td><td><span class="dtype string">string</span></td><td>재료명</td><td>"발굽"</td></tr>
       <tr><td class="fname"><span class="key-fk">FK</span>DropMonsterID</td><td><span class="dtype string">string</span></td><td>드롭 몬스터 참조 (→ MutoMonster.MonsterID)</td><td>"M01"</td></tr>
-      <tr><td class="fname">IsRareMaterial</td><td><span class="dtype bool">bool</span></td><td>희귀 재료(별도 리젠 개체 드롭) 여부</td><td>false</td></tr>
     </table>
     <table class="schema">
-      <tr><th>IngredientID</th><th>IngredientName</th><th>DropMonsterID</th><th>IsRareMaterial</th></tr>
-      <tr><td>I01</td><td>발굽</td><td>M01</td><td>false</td></tr>
-      <tr><td>I02</td><td>갈기</td><td>M02</td><td>false</td></tr>
-      <tr><td>I03</td><td>물갈퀴</td><td>M03</td><td>false</td></tr>
-      <tr><td>I04</td><td>등껍질</td><td>M04</td><td>false</td></tr>
-      <tr><td>I05</td><td>발바닥</td><td>M05</td><td>false</td></tr>
-      <tr><td>I06</td><td>깃털</td><td>M06</td><td>false</td></tr>
-      <tr><td>I07</td><td>발톱</td><td>M07</td><td>false</td></tr>
-      <tr><td>I08</td><td>츄릅열매</td><td>M08</td><td>true</td></tr>
-      <tr><td>I09</td><td>껍질</td><td>M09</td><td>false</td></tr>
+      <tr><th>IngredientID</th><th>IngredientName</th><th>DropMonsterID</th></tr>
+      <tr><td>I01</td><td>발굽</td><td>M01</td></tr>
+      <tr><td>I02</td><td>갈기</td><td>M02</td></tr>
+      <tr><td>I03</td><td>물갈퀴</td><td>M03</td></tr>
+      <tr><td>I04</td><td>등껍질</td><td>M04</td></tr>
+      <tr><td>I05</td><td>발바닥</td><td>M05</td></tr>
+      <tr><td>I06</td><td>깃털</td><td>M06</td></tr>
+      <tr><td>I07</td><td>발톱</td><td>M07</td></tr>
+      <tr><td>I08</td><td>츄릅열매</td><td>M08</td></tr>
+      <tr><td>I09</td><td>껍질</td><td>M09</td></tr>
     </table>
-    <p class="footnote">→ I09(껍질)의 드롭 몬스터는 유나나(일반) / 램나나(상위종)로 확인됨.</p>
+    <p class="footnote">→ I09(껍질)의 드롭 몬스터는 유나나(일반) / 램나나(상위종)로 확인됨. I08(츄릅열매)은 희귀 리젠 몬스터(M08 츄릅나무) 전용 재료로, "희귀 리젠"이라는 특성은 재료 쪽에 별도 플래그를 두지 않고 DropMonsterID가 가리키는 MutoMonster.SpawnType 필드에서 관리한다(같은 정보를 두 테이블에 중복 저장하지 않기 위함).</p>
 
     <!-- TABLE 3: Monster -->
     <div class="schema-title">
       <span class="tbl-name">MutoMonster</span>
       <span class="tbl-desc">필드 몬스터 마스터 (일반종/상위종 자기참조 구조)</span>
     </div>
+    <p class="rationale">
+      <b>분류 기준</b> — 일반종과 상위종을 서로 다른 테이블로 만들지 않고 자기참조(UpgradeFromID)로
+      묶은 이유는, 두 개체가 완전히 별개의 존재가 아니라 "같은 개체의 강화 상태"이기 때문이다.
+      SpawnZone은 04장의 "구역별 재료 분산 배치"를 실제로 구현하는 데 필요한 최소 정보라 포함했고,
+      SpawnType은 "희귀 리젠 여부"를 나타내는데, true/false로 나뉘는 값이라도 이후 리젠 방식이
+      늘어날 가능성(예: 시간제 리젠, 조건부 리젠)을 감안해 bool 대신 enum으로 잡았다. 즉 이
+      테이블의 필드는 "이 몬스터가 어떻게 등장하고(SpawnZone·SpawnType), 강화되면 무엇이 되는가
+      (Tier·UpgradeFromID)"라는 두 가지 질문을 기준으로 나뉜다.
+    </p>
     <table class="schema">
       <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값</th></tr>
       <tr><td class="fname"><span class="key-pk">PK</span>MonsterID</td><td><span class="dtype string">string</span></td><td>몬스터 고유 ID</td><td>"M01"</td></tr>
@@ -840,34 +878,44 @@
       <tr><td class="fname"><span class="key-fk">FK</span>UpgradeFromID</td><td><span class="dtype string">string</span></td><td>자기참조 FK. 이 몬스터가 어떤 일반종의 상위종인지 (→ MutoMonster.MonsterID, nullable)</td><td>null</td></tr>
       <tr><td class="fname">HP</td><td><span class="dtype int">int</span></td><td>체력 (정식 밸런스 수치 비공개로 임의값 부여)</td><td class="placeholder">100</td></tr>
       <tr><td class="fname">SpawnZone</td><td><span class="dtype enum">enum</span></td><td>출현 구역 (Left / Right / Central)</td><td>Left</td></tr>
+      <tr><td class="fname">SpawnType</td><td><span class="dtype enum">enum</span></td><td>리젠 방식 (Normal / RareSpawn)</td><td>Normal</td></tr>
     </table>
     <table class="schema">
-      <tr><th>MonsterID</th><th>MonsterName</th><th>Tier</th><th>UpgradeFromID</th><th>HP</th></tr>
-      <tr><td>M01</td><td>파인디어</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M01U</td><td>큰뿔 파인디어</td><td>Upgraded</td><td>M01</td><td class="placeholder">100</td></tr>
-      <tr><td>M02</td><td>플리온</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M02U</td><td>성난 플리온</td><td>Upgraded</td><td>M02</td><td class="placeholder">100</td></tr>
-      <tr><td>M03</td><td>설익은 울프룻</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M03U</td><td>잘 익은 울프룻</td><td>Upgraded</td><td>M03</td><td class="placeholder">100</td></tr>
-      <tr><td>M04</td><td>그린 캣피시</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M04U</td><td>블루 캣피시</td><td>Upgraded</td><td>M04</td><td class="placeholder">100</td></tr>
-      <tr><td>M05</td><td>라이터틀</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M05U</td><td>대장 라이터틀</td><td>Upgraded</td><td>M05</td><td class="placeholder">100</td></tr>
-      <tr><td>M06</td><td>크릴라</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M06U</td><td>족장 크릴라</td><td>Upgraded</td><td>M06</td><td class="placeholder">100</td></tr>
-      <tr><td>M07</td><td>버샤크</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M07U</td><td>족장 버샤크</td><td>Upgraded</td><td>M07</td><td class="placeholder">100</td></tr>
-      <tr><td>M08</td><td>츄릅나무</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M09</td><td>유나나</td><td>Normal</td><td>null</td><td class="placeholder">100</td></tr>
-      <tr><td>M09U</td><td>램나나</td><td>Upgraded</td><td>M09</td><td class="placeholder">100</td></tr>
+      <tr><th>MonsterID</th><th>MonsterName</th><th>Tier</th><th>UpgradeFromID</th><th>HP</th><th>SpawnType</th></tr>
+      <tr><td>M01</td><td>파인디어</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M01U</td><td>큰뿔 파인디어</td><td>Upgraded</td><td>M01</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M02</td><td>플리온</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M02U</td><td>성난 플리온</td><td>Upgraded</td><td>M02</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M03</td><td>설익은 울프룻</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M03U</td><td>잘 익은 울프룻</td><td>Upgraded</td><td>M03</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M04</td><td>그린 캣피시</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M04U</td><td>블루 캣피시</td><td>Upgraded</td><td>M04</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M05</td><td>라이터틀</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M05U</td><td>대장 라이터틀</td><td>Upgraded</td><td>M05</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M06</td><td>크릴라</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M06U</td><td>족장 크릴라</td><td>Upgraded</td><td>M06</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M07</td><td>버샤크</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M07U</td><td>족장 버샤크</td><td>Upgraded</td><td>M07</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M08</td><td>츄릅나무</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>RareSpawn</td></tr>
+      <tr><td>M09</td><td>유나나</td><td>Normal</td><td>null</td><td class="placeholder">100</td><td>Normal</td></tr>
+      <tr><td>M09U</td><td>램나나</td><td>Upgraded</td><td>M09</td><td class="placeholder">100</td><td>Normal</td></tr>
     </table>
-    <p class="footnote">→ 모든 몬스터의 HP는 정식 밸런스 수치가 비공개라 개발 편의상 <span class="placeholder">100</span>으로 통일해 임의 지정함. 실제 구현 시 몬스터별 난이도에 맞춰 재조정 필요.</p>
+    <p class="footnote">→ 모든 몬스터의 HP는 정식 밸런스 수치가 비공개라 개발 편의상 <span class="placeholder">100</span>으로 통일해 임의 지정함. 실제 구현 시 몬스터별 난이도에 맞춰 재조정 필요. SpawnType이 RareSpawn인 M08(츄릅나무)만 04장의 "희귀 리젠" 특성에 해당한다.</p>
 
     <!-- TABLE 4: Recipe -->
     <div class="schema-title">
       <span class="tbl-name">MutoRecipe</span>
       <span class="tbl-desc">레시피 마스터 (재료 슬롯 4개 + 자기참조 대칭쌍)</span>
     </div>
+    <p class="rationale">
+      <b>분류 기준</b> — 레시피 테이블은 이 문서에서 필드가 가장 많은데, 05장 코어 루프의 세 단계와
+      1:1로 대응시켰기 때문이다. ① 식별 정보(RecipeID·RecipeName·RecipeGroup)는 "레시피 확인"
+      단계, ② 재료 요구량(Ingredient1~4_ID/Qty·PairedRecipeID)은 "재료 채집" 단계, ③ 완성 판정
+      규칙(BonusTimeLimit_Sec·GaugeGain_Normal·GaugeGain_Perfect)은 "조리대 제출·게이지 피드백"
+      단계에 각각 대응된다. 재료 슬롯을 하나의 배열이 아니라 Ingredient1~4로 나눠 펼친 이유는,
+      레시피마다 재료 종류(2~4개)가 달라 가변 길이 배열보다 고정 슬롯 방식이 스프레드시트 기반
+      데이터 관리에 더 적합하기 때문이다.
+    </p>
     <table class="schema">
       <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값</th></tr>
       <tr><td class="fname"><span class="key-pk">PK</span>RecipeID</td><td><span class="dtype string">string</span></td><td>레시피 고유 ID</td><td>"R05"</td></tr>
@@ -918,6 +966,13 @@
       <span class="tbl-name">MutoReward</span>
       <span class="tbl-desc">보상 테이블 (QuestID 참조)</span>
     </div>
+    <p class="rationale">
+      <b>분류 기준</b> — 이 테이블은 "어떤 퀘스트가 무엇을, 얼마나, 어떤 조건으로 지급하는가"라는
+      결과값만 다룬다. 클리어 여부 판정이나 게이지 계산 같은 로직은 MutoQuestConfig·MutoRecipe
+      쪽에서 이미 처리되므로, 여기서는 그 로직의 산출물인 보상 목록만 다루도록 범위를 좁혔다.
+      RewardType을 ClearReward/DailyComboBonus로 나눈 이유는 01장에서 다룬 "1회 클리어 240개 vs
+      일퀘 병행 시 주간 520개"라는 두 가지 지급 경로를 데이터상으로도 구분하기 위함이다.
+    </p>
     <table class="schema">
       <tr><th>필드명</th><th>타입</th><th>설명</th><th>예시값</th></tr>
       <tr><td class="fname"><span class="key-pk">PK</span>RewardID</td><td><span class="dtype int">int</span></td><td>보상 고유 ID</td><td>1</td></tr>
@@ -926,12 +981,11 @@
       <tr><td class="fname">RewardItemID</td><td><span class="dtype string">string</span></td><td>보상 아이템 ID</td><td>"ITEM_ARCANE_SYMBOL_CHUCHU"</td></tr>
       <tr><td class="fname">RewardItemName</td><td><span class="dtype string">string</span></td><td>보상 아이템명</td><td>"아케인심볼: 츄츄 아일랜드"</td></tr>
       <tr><td class="fname">Quantity</td><td><span class="dtype int">int</span></td><td>지급 개수</td><td>240</td></tr>
-      <tr><td class="fname">IsTradable</td><td><span class="dtype bool">bool</span></td><td>거래 가능 여부</td><td>false</td></tr>
     </table>
     <table class="schema">
-      <tr><th>RewardID</th><th>QuestID</th><th>RewardType</th><th>RewardItemName</th><th>Quantity</th><th>IsTradable</th></tr>
-      <tr><td>1</td><td>1001</td><td>ClearReward</td><td>아케인심볼: 츄츄 아일랜드</td><td>240</td><td>false</td></tr>
-      <tr><td>2</td><td>1001</td><td>DailyComboBonus</td><td>아케인심볼: 츄츄 아일랜드 (일퀘 병행 주간 합산)</td><td>520 (합산 총량)</td><td>false</td></tr>
+      <tr><th>RewardID</th><th>QuestID</th><th>RewardType</th><th>RewardItemName</th><th>Quantity</th></tr>
+      <tr><td>1</td><td>1001</td><td>ClearReward</td><td>아케인심볼: 츄츄 아일랜드</td><td>240</td></tr>
+      <tr><td>2</td><td>1001</td><td>DailyComboBonus</td><td>아케인심볼: 츄츄 아일랜드 (일퀘 병행 주간 합산)</td><td>520 (합산 총량)</td></tr>
     </table>
 
     <!-- ERD -->

@@ -642,6 +642,113 @@ button {
   font-weight: 700;
 }
 
+/* ============ Quick stats (hero) ============ */
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 36px;
+  margin-top: 48px;
+  padding-top: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.stat-num {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+
+/* ============ Featured work ============ */
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 36px;
+}
+
+.featured-card {
+  display: block;
+  background: var(--navy-900);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 26px 26px 24px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.featured-card:hover {
+  border-color: var(--gold-line);
+  transform: translateY(-2px);
+}
+
+.featured-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.featured-category {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.featured-arrow {
+  color: var(--ink-faint);
+  font-size: 15px;
+}
+
+.featured-title {
+  font-size: 19px;
+  margin-bottom: 10px;
+}
+
+.featured-summary {
+  font-size: 13.8px;
+  color: var(--ink-soft);
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.featured-genre {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+/* ============ Core competency tags ============ */
+.competency-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.competency-tag {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--navy-900);
+}
+
 /* ============ Skill gauge ============ */
 .skill-list {
   margin-top: 36px;
@@ -687,6 +794,12 @@ button {
 @media (max-width: 780px) {
   .card-grid {
     grid-template-columns: 1fr;
+  }
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+  .stat-row {
+    gap: 24px;
   }
   .project-meta-grid {
     grid-template-columns: 1fr;
