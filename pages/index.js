@@ -63,7 +63,7 @@ export default function Home() {
           <p className="section-label">Featured Work</p>
           <h2 className="section-title">대표 작업물</h2>
           <p className="section-desc">
-            포트폴리오 중 서로 다른 역량을 보여주는 두 문서를 먼저 소개합니다.
+            포트폴리오 중 서로 다른 역량을 보여주는 세 문서를 먼저 소개합니다.
           </p>
           <div className="featured-grid">
             {featured.map((p) => (
