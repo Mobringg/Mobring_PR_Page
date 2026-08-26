@@ -1,0 +1,17 @@
+{
+  "name": "haseungyeop-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@vercel/blob": "^0.27.1",
+    "next": "16.2.12",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  }
+}
