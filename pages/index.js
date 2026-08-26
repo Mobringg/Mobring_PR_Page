@@ -8,11 +8,25 @@ import {
   PROJECTS,
   FEATURED_PROJECT_IDS,
   CORE_COMPETENCIES,
-  CATEGORY_STATS,
-  TOTAL_PROJECT_COUNT,
 } from "@/lib/data";
+import { getDynamicProjects } from "@/lib/portfolio-blob";
 
-export default function Home() {
+export async function getServerSideProps() {
+  const dynamicProjects = await getDynamicProjects();
+  const allProjects = [...PROJECTS, ...dynamicProjects];
+
+  const totalProjectCount = allProjects.length;
+  const categoryStats = allProjects.reduce((acc, p) => {
+    const found = acc.find((c) => c.category === p.category);
+    if (found) found.count += 1;
+    else acc.push({ category: p.category, count: 1 });
+    return acc;
+  }, []);
+
+  return { props: { totalProjectCount, categoryStats } };
+}
+
+export default function Home({ totalProjectCount, categoryStats }) {
   const featured = FEATURED_PROJECT_IDS.map((id) =>
     PROJECTS.find((p) => p.id === id)
   ).filter(Boolean);
@@ -44,10 +58,10 @@ export default function Home() {
             <p className="stat-row-title">작업 문서 현황</p>
             <div className="stat-row-items">
               <div className="stat-item">
-                <div className="stat-num">{String(TOTAL_PROJECT_COUNT).padStart(2, "0")}</div>
+                <div className="stat-num">{String(totalProjectCount).padStart(2, "0")}</div>
                 <div className="stat-label">포트폴리오 문서</div>
               </div>
-              {CATEGORY_STATS.map((c) => (
+              {categoryStats.map((c) => (
                 <div className="stat-item" key={c.category}>
                   <div className="stat-num">{String(c.count).padStart(2, "0")}</div>
                   <div className="stat-label">{c.category}</div>

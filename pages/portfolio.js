@@ -1,4 +1,11 @@
-import { PROJECTS } from "@/lib/data";
+import { PROJECTS as STATIC_PROJECTS } from "@/lib/data";
+import { getDynamicProjects } from "@/lib/portfolio-blob";
+
+export async function getServerSideProps() {
+  const dynamicProjects = await getDynamicProjects();
+  // 관리자 페이지에서 추가한 항목을 뒤에 붙입니다 (기존 항목 순서는 그대로 유지).
+  return { props: { projects: [...STATIC_PROJECTS, ...dynamicProjects] } };
+}
 
 function groupByCategory(projects) {
   const groups = [];
@@ -13,8 +20,8 @@ function groupByCategory(projects) {
   return groups;
 }
 
-export default function Portfolio() {
-  const groups = groupByCategory(PROJECTS);
+export default function Portfolio({ projects }) {
+  const groups = groupByCategory(projects);
 
   return (
     <section className="section" style={{ paddingTop: 70 }}>
