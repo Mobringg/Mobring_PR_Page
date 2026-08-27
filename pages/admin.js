@@ -47,7 +47,13 @@ export default function Admin({ dynamicProjects }) {
 
     try {
       // 1) 브라우저에서 Blob으로 파일 직접 업로드
-      const blob = await upload(file.name, file, {
+      // 파일명에 한글이나 공백이 섞여 있으면 업로드 경로에서 문제가 생길 수 있어,
+      // 확장자만 원본에서 가져오고 나머지는 타임스탬프로 안전하게 구성합니다.
+      // (화면에 보이는 제목은 어차피 위에서 입력한 "제목" 필드가 따로 담당합니다)
+      const ext = file.name.split(".").pop().toLowerCase();
+      const safeName = `${Date.now()}.${ext}`;
+
+      const blob = await upload(`portfolio/files/${safeName}`, file, {
         access: "public",
         handleUploadUrl: "/api/admin/blob-upload",
       });
@@ -70,10 +76,25 @@ export default function Admin({ dynamicProjects }) {
       setForm({ title: "", category: "", genre: "", summary: "", linkLabel: "" });
       setMeta(emptyMeta);
       setFile(null);
-      setStatus("추가 완료! 포트폴리오 페이지에 반영되었습니다.");
+      setStatus("추가 완료! 기본값은 비공개 상태입니다 — 아래 목록에서 '공개로 전환'을 눌러야 실제 포트폴리오 페이지에 노출됩니다.");
     } catch (err) {
       setStatus(`실패: ${err.message}`);
     }
+  }
+
+  async function handleTogglePublish(id, nextPublished) {
+    const res = await fetch("/api/admin/toggle-publish", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, published: nextPublished }),
+    });
+    if (!res.ok) {
+      alert("상태 변경에 실패했습니다.");
+      return;
+    }
+    setItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, published: nextPublished } : item))
+    );
   }
 
   async function handleDelete(id) {
@@ -171,19 +192,44 @@ export default function Admin({ dynamicProjects }) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                gap: 10,
                 padding: "10px 0",
                 borderBottom: "1px solid #eee",
               }}
             >
-              <span>{item.title}</span>
-              <button className="btn btn-ghost" onClick={() => handleDelete(item.id)}>
-                삭제
-              </button>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    padding: "3px 8px",
+                    borderRadius: 20,
+                    color: item.published ? "#2f6b3a" : "#8c3a2f",
+                    background: item.published ? "#eaf3e8" : "#f8eeea",
+                  }}
+                >
+                  {item.published ? "🟢 공개중" : "⚪ 비공개"}
+                </span>
+                <span>{item.title}</span>
+              </div>
+              <div style={{ display: "flex", gap: 6, flex: "none" }}>
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => handleTogglePublish(item.id, !item.published)}
+                >
+                  {item.published ? "비공개로 전환" : "공개로 전환"}
+                </button>
+                <button className="btn btn-ghost" onClick={() => handleDelete(item.id)}>
+                  삭제
+                </button>
+              </div>
             </li>
           ))}
         </ul>
         <p style={{ fontSize: 12, color: "var(--ink-soft)", marginTop: 20 }}>
-          기존에 lib/data.js에 직접 넣어둔 프로젝트(역기획서·세븐나이츠 분석 등)는
+          새로 추가한 문서는 기본적으로 <b>비공개</b> 상태로 저장되어 실제 방문자에게는
+          보이지 않습니다. 내용을 확인한 뒤 "공개로 전환" 버튼을 눌러야 /portfolio 페이지에
+          노출됩니다. 기존에 lib/data.js에 직접 넣어둔 프로젝트(역기획서·세븐나이츠 분석 등)는
           이 목록에 나오지 않습니다 — 그건 코드에 있는 원본이고, 여기는 이후로 새로
           추가하는 문서만 관리합니다.
         </p>

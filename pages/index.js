@@ -12,7 +12,7 @@ import {
 import { getDynamicProjects } from "@/lib/portfolio-blob";
 
 export async function getServerSideProps() {
-  const dynamicProjects = await getDynamicProjects();
+  const dynamicProjects = await getDynamicProjects({ onlyPublished: true });
   const allProjects = [...PROJECTS, ...dynamicProjects];
 
   const totalProjectCount = allProjects.length;
