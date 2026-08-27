@@ -1,15 +1,8 @@
 import Link from "next/link";
 import SkillBar from "@/components/SkillBar";
-import {
-  SITE,
-  STRENGTHS,
-  SKILLS,
-  PLAYED_GAMES,
-  PROJECTS,
-  FEATURED_PROJECT_IDS,
-  CORE_COMPETENCIES,
-} from "@/lib/data";
+import { PROJECTS, FEATURED_PROJECT_IDS } from "@/lib/data";
 import { getDynamicProjects } from "@/lib/portfolio-blob";
+import { getSiteContent } from "@/lib/site-content-blob";
 
 export async function getServerSideProps() {
   const dynamicProjects = await getDynamicProjects({ onlyPublished: true });
@@ -23,10 +16,13 @@ export async function getServerSideProps() {
     return acc;
   }, []);
 
-  return { props: { totalProjectCount, categoryStats } };
+  const siteContent = await getSiteContent();
+
+  return { props: { totalProjectCount, categoryStats, siteContent } };
 }
 
-export default function Home({ totalProjectCount, categoryStats }) {
+export default function Home({ totalProjectCount, categoryStats, siteContent }) {
+  const { site: SITE, strengths: STRENGTHS, skills: SKILLS, playedGames: PLAYED_GAMES, coreCompetencies: CORE_COMPETENCIES } = siteContent;
   const featured = FEATURED_PROJECT_IDS.map((id) =>
     PROJECTS.find((p) => p.id === id)
   ).filter(Boolean);

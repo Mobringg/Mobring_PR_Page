@@ -4,6 +4,7 @@
 // middleware.js가 이미 이 경로 전체를 아이디·비밀번호로 막고 있습니다.
 
 import { useState } from "react";
+import Link from "next/link";
 import { upload } from "@vercel/blob/client";
 import { getDynamicProjects } from "@/lib/portfolio-blob";
 
@@ -112,6 +113,9 @@ export default function Admin({ dynamicProjects }) {
       <div className="shell" style={{ maxWidth: 640 }}>
         <p className="section-label">Admin</p>
         <h1 className="section-title">포트폴리오 관리</h1>
+        <p style={{ marginBottom: 20 }}>
+          <Link href="/admin/content" className="btn btn-ghost">사이트 콘텐츠 관리(이름·강점·자기소개서 등) →</Link>
+        </p>
 
         <form
           onSubmit={handleSubmit}
